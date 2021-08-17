@@ -2,14 +2,6 @@
   <div class="home">
     <h1>Welcome to this social website</h1>
     <h2>This is your feed, you'll see every post in there</h2>
-    <form class="login" @submit.prevent="login">
-     <h1>Sign in</h1>
-     <label>User name</label>
-     <input required v-model="username" type="text" placeholder="email"/>
-     <label>Password</label>
-     <input required v-model="password" type="password" placeholder="Password"/>
-     <button type="button" v-on:click="connexion">Login</button>
-   </form>
     <hr/>
     <addThread />
     <hr/>

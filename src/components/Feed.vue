@@ -15,6 +15,8 @@
 
 <script>
 import Thread from './Thread.vue'
+import Axios from 'axios';
+
 
 export default {
   name: 'Feed',
@@ -28,24 +30,33 @@ export default {
      };
   },
   methods: {
-      async getThreads(){
-        const res = await fetch("http://localhost:3000/api/thread/");
-        const results = await res.json();
-        console.log("results", results);
-        if(!res.ok){
-          console.log("error while fetching");
-        } else {
-          this.datasFetched = true;
-          return results;
-        }
+    getThreads(){
+      //   const res = await fetch("http://localhost:3000/api/thread/");
+      //   const results = await res.json();
+      //   console.log("results", results);
+      //   if(!res.ok){
+      //     console.log("error while fetching");
+      //   } else {
+      //     this.datasFetched = true;
+      //     return results;
+      //   }
+      // }
+
+      console.log("getThreads");
+      Axios.get("/thread/")
+                 .then(res => {
+                    console.log(".then", res.data);
+                    this.datasFetched = true;
+                    // return res.data;
+                    this.threads = res.data;
+                 })
+                 .catch(error => console.log("trouble while fetching datas: ", error));      
       }
   },
-  async created(){
-      this.threads = await this.getThreads();
+  created(){
+      this.getThreads();
+      // this.threads = await this.getThreads();
       console.log("this.threads", this.threads);
-  },
-  beforeMount(){
-    console.log("beforeMount", this.threads);
   }
 }
 </script>

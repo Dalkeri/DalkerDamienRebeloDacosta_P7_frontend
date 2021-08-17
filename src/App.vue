@@ -1,10 +1,31 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <!-- <createUser />
+    <div> | </div> 
+    <connectUser /> -->
+
+    <headerNav />
+
+    <!-- <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link> -->
   </div>
   <router-view/>
 </template>
+
+<script>
+// import createUser from './components/createUser.vue'
+// import connectUser from './components/connectUser.vue'
+import headerNav from './components/headerNav.vue'
+
+export default {
+  components: {
+    headerNav
+    // createUser,
+    // connectUser
+  }
+  
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -17,6 +38,8 @@
 
 #nav {
   padding: 30px;
+  display: flex;
+  justify-content: center;
 
   a {
     font-weight: bold;
