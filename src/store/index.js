@@ -4,7 +4,8 @@ export default createStore({
   state: {
     count: 0,
     token: '',
-    navMenu: 'none',
+    navMenu: 'none', //ajouter user pour stocker les infos de l'user 
+    userConnected: '',
   },
   mutations: {
     increment (state) {
@@ -21,11 +22,20 @@ export default createStore({
       } else {
         state.navMenu = "none";
       }
+    },
+    setUserInfo(state, value){
+      state.userConnected = value;
+      console.log("state", state);
     }
   },
   actions: {
     stateHeader(context, state) {
       context.commit('setStateHeader', state);
+    },
+    userInfo(context, state){
+      context.commit('setUserInfo', state);
+      context.commit('setStateHeader', "none");
+      console.log("here");
     }
   },
   modules: {

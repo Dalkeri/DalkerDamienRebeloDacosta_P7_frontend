@@ -1,45 +1,77 @@
 <template>
     <div class="headerNav">
-        <span>
-            <button type="button" v-on:click="signupForm">S'inscrire</button>
-            |
-            <button type="button" v-on:click="loginForm">Se connecter</button>
-        </span>
-        <div v-if="navMenu == 'connectUser'">
-            <!-- <form onsubmit="signIn"> -->
-            <form @submit.prevent="signIn">
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br>
-                <label for="password">Mot de passe:</label><br>
-                <input type="text" id="password" name="password" required><br><br>
-                <input type="submit" value="Connexion">
-            </form> 
+        <div>img</div>
+        <div v-if="userConnected == ''">
+            <span>
+                <button type="button" v-on:click="signupForm">S'inscrire</button>
+                |
+                <button type="button" v-on:click="loginForm">Se connecter</button>
+            </span>
+            <div v-if="navMenu == 'connectUser'">
+                <!-- <form onsubmit="signIn"> -->
+                <form @submit.prevent="signIn">
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="signInEmail" name="signInEmail" v-model="SIEmail" required><br>
+                    <label for="password">Mot de passe:</label><br>
+                    <input type="password" id="signInPassword" name="signInPassword" v-model="SIPassword" required><br><br>
+                    <input type="submit" value="Connexion">
+                </form> 
+            </div>
+            <div v-if="navMenu == 'createUser'">
+                <!-- <form onSubmit="SignUp"> -->
+                <form @submit.prevent="signUp">
+                    <label for="lname">Nom:</label><br>
+                    <input type="text" id="signUpLName" name="signUpLName" v-model="SULName" required><br>
+                    <label for="fname">Prenom:</label><br>
+                    <input type="text" id="signUpFName" name="signUpFName" v-model="SUFName" required><br>
+                    <label for="email">Email:</label><br>
+
+                    <!-- regex (+ back) -->
+                    <input type="email" id="signUpEmail" name="signUpEmail" v-model="SUEmail" pattern="[a-z0-9\._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" required><br>
+                    <label for="password">Mot de passe:</label><br>
+
+                    <!-- check mdp sécurisé -->
+                    <input type="text" id="signUpPassword" name="signUpPassword" v-model="SUPassword" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required><br>
+                    <input type="text" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required><br>
+                    <i>passwords must be 8 characters long, with at least one uppercase letter, at least one lowercase letter, at least one digit or special character !</i><br>
+                    <input type="submit" value="Inscription">
+                    <div id="errorMessage">{{ errorMessage }}</div>
+                </form> 
+            </div>
         </div>
-        <div v-if="navMenu == 'createUser'">
-            <!-- <form onSubmit="SignUp"> -->
-            <form @submit.prevent="signUp">
-                <label for="lname">Nom:</label><br>
-                <input type="text" id="lname" name="lname" required><br>
-                <label for="fname">Prenom:</label><br>
-                <input type="text" id="fname" name="fname" required><br>
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br>
-                <label for="password">Mot de passe:</label><br>
-                <input type="text" id="password" name="password" required><br><br>
-                <input type="submit" value="Inscription">
-            </form> 
+        <div v-if="userConnected != ''">
+            <router-link to="/account">Mon compte</router-link>
+            <button type="button" v-on:click="disconnect">se déconnecter</button>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex"
+import Axios from 'axios';
+
 
 export default {
     name: 'headerNav',
+    data() {
+        return {
+            SULName:"",
+            SUFName:"",
+            SUEmail:"",
+            SUPassword:"",
+            SUPassword2:"",
+
+            errorMessage:"",
+
+            SIEmail:"",
+            SIPassword:""
+        }
+    },
     computed: {
         ...mapState({
-            navMenu: ({ navMenu }) => navMenu
+            navMenu: ({ navMenu }) => navMenu,
+            userConnected: ({userConnected}) => userConnected
+            //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
         }),
     },
     methods: {
@@ -55,11 +87,68 @@ export default {
             e.preventDefault();
             
             console.log("signin");
-        },
-        signUp(e){
-            e.preventDefault();
 
-            console.log("signup");
+            let signInInfo = {
+                email: this.SIEmail,
+                password: this.SIPassword
+            }
+
+            console.log("signInInfo", signInInfo);
+
+             Axios.post("/user/login", signInInfo )
+                //  .then( response => response.json() )
+                 .then( res => {
+                        console.log(res);
+                        this.$store.dispatch('userInfo', res.data.user );
+                        localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
+
+                 });
+        },
+        disconnect(){
+            this.$store.dispatch('userInfo', '');
+            localStorage.removeItem("groupomaniaToken");
+
+        },
+        async signUp(e){ //ajouter connexion auto ou message pour indiquer la création
+            e.preventDefault();
+        
+            if(this.SUPassword !== this.SUPassword2){
+                this.errorMessage = "Les deux mots de passes doivent être différents";
+                return;
+            }
+            this.errorMessage = '';
+            let signUpInfo = {
+                firstName: this.SUFName,
+                lastName: this.SULName,
+                email: this.SUEmail,
+                password: this.SUPassword
+            }
+
+            console.log("signup", signUpInfo);
+            // fetch( "http://localhost:3000/api/user/signup", {   
+            //     method: 'POST',
+            //     headers: {
+            //     'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(signUpInfo)
+            // })
+            // .then( response => response.json() )
+            // .then( res => console.log(res));            
+            
+            Axios.post("/user/signup", signUpInfo )
+                //  .then( response => response.json() )
+                 .then( res => console.log(res));
+        
+
+            // let res = await Axios.post('http://localhost:3000/signup/', signUpInfo);
+            // console.log(res.data);
+
+            // Axios.post({
+            //     method: 'post',
+            //     url: '/user/signup/',
+            //     data: signUpInfo
+            // })
+            // .then( response => response.json() );
         }
     },
 }

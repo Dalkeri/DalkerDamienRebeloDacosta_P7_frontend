@@ -15,7 +15,7 @@
 
 <script>
 import Thread from './Thread.vue'
-import Axios from 'axios';
+import axios from 'axios';
 
 
 export default {
@@ -43,14 +43,14 @@ export default {
       // }
 
       console.log("getThreads");
-      Axios.get("/thread/")
-                 .then(res => {
-                    console.log(".then", res.data);
-                    this.datasFetched = true;
-                    // return res.data;
-                    this.threads = res.data;
-                 })
-                 .catch(error => console.log("trouble while fetching datas: ", error));      
+      axios.get("http://localhost:3000/api/thread/")
+            .then(res => {
+              console.log(".then", res.data);
+              this.datasFetched = true;
+              // return res.data;
+              this.threads = res.data;
+              })
+            .catch(error => console.log("trouble while fetching datas: ", error));      
       }
   },
   created(){
