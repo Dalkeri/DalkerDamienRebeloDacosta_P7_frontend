@@ -30,18 +30,11 @@ export default {
      };
   },
   methods: {
+    updateThreads(){
+      console.log("update");
+      this.getThreads();
+    },
     getThreads(){
-      //   const res = await fetch("http://localhost:3000/api/thread/");
-      //   const results = await res.json();
-      //   console.log("results", results);
-      //   if(!res.ok){
-      //     console.log("error while fetching");
-      //   } else {
-      //     this.datasFetched = true;
-      //     return results;
-      //   }
-      // }
-
       console.log("getThreads");
       axios.get("http://localhost:3000/api/thread/")
             .then(res => {
@@ -54,9 +47,9 @@ export default {
       }
   },
   created(){
-      this.getThreads();
-      // this.threads = await this.getThreads();
-      console.log("this.threads", this.threads);
+    this.getThreads();
+    // this.threads = await this.getThreads();
+    console.log("this.threads", this.threads);
   }
 }
 </script>

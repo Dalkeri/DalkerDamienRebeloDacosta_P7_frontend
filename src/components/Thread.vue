@@ -27,7 +27,7 @@ export default {
      };
   },
   created(){
-      console.log("props", this.threadDatas);
+      // console.log("props", this.threadDatas);
   },
   components: {
     addThread

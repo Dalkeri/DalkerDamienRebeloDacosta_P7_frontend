@@ -7,6 +7,7 @@
                 |
                 <button type="button" v-on:click="loginForm">Se connecter</button>
             </span>
+            <!-- component connect -->
             <div v-if="navMenu == 'connectUser'">
                 <!-- <form onsubmit="signIn"> -->
                 <form @submit.prevent="signIn">
@@ -17,6 +18,7 @@
                     <input type="submit" value="Connexion">
                 </form> 
             </div>
+            <!-- component create -->
             <div v-if="navMenu == 'createUser'">
                 <!-- <form onSubmit="SignUp"> -->
                 <form @submit.prevent="signUp">
@@ -39,6 +41,7 @@
                 </form> 
             </div>
         </div>
+        <!-- component connected -->
         <div v-if="userConnected != ''">
             <router-link to="/account">Mon compte</router-link>
             <button type="button" v-on:click="disconnect">se déconnecter</button>
@@ -98,7 +101,7 @@ export default {
              Axios.post("/user/login", signInInfo )
                 //  .then( response => response.json() )
                  .then( res => {
-                        console.log(res);
+                        console.log("res", res);
                         this.$store.dispatch('userInfo', res.data.user );
                         localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
 
@@ -109,7 +112,7 @@ export default {
             localStorage.removeItem("groupomaniaToken");
 
         },
-        async signUp(e){ //ajouter connexion auto ou message pour indiquer la création
+        signUp(e){ //ajouter connexion auto ou message pour indiquer la création
             e.preventDefault();
         
             if(this.SUPassword !== this.SUPassword2){
@@ -137,7 +140,7 @@ export default {
             
             Axios.post("/user/signup", signUpInfo )
                 //  .then( response => response.json() )
-                 .then( res => console.log(res));
+                 .then( res => console.log("res", res));
         
 
             // let res = await Axios.post('http://localhost:3000/signup/', signUpInfo);

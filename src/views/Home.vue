@@ -5,7 +5,7 @@
     <hr/>
     <addThread />
     <hr/>
-    <Feed />
+    <Feed  @myevent="updateThreads" />
   </div>
 </template>
 
@@ -33,6 +33,9 @@ export default {
     //     console.log(this.$store.state.count);
     //     // console.log()
     // }
+    updateThreads(){
+      console.log("cocou");
+    },
     async connexion(){
         const res = await fetch( "http://localhost:3000/api/auth/login", {
                                   method: 'POST',
