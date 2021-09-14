@@ -3,9 +3,9 @@
     <h1>Welcome to this social website</h1>
     <h2>This is your feed, you'll see every post in there</h2>
     <hr/>
-    <addThread />
+    <addThread @my-event="updateThreads" />
     <hr/>
-    <Feed  @myevent="updateThreads" />
+    <Feed  :reloadThreads="reloadThreads" @my-event="updateThreads" />
   </div>
 </template>
 
@@ -15,6 +15,9 @@ import addThread from '../components/addThread.vue'
 import Feed from '../components/Feed.vue'
 // import store from '../store/index.js'
 
+// import { mapState } from "vuex"
+import Axios from 'axios';
+
 export default {
   name: 'Home',
   components: {
@@ -23,7 +26,7 @@ export default {
   },
   data: function() {
     return { 
-      token: ''
+      reloadThreads: false
     };
   },
   methods: {
@@ -34,33 +37,26 @@ export default {
     //     // console.log()
     // }
     updateThreads(){
-      console.log("cocou");
-    },
-    async connexion(){
-        const res = await fetch( "http://localhost:3000/api/auth/login", {
-                                  method: 'POST',
-                                  headers: {
-                                  'Content-Type': 'application/json',
-                                  },
-                                  body: JSON.stringify(
-                                    {
-                                        "email": "Damien1@Damien1.com",
-                                        "password": "Damien1Pass"
-                                    }
-                                  )
-                              })
-        const results = await res.json();
-        console.log("result connexion", results);
-        console.log("res connexion", res);
-        if(!res.ok){
-          console.log("error while connecting");
-        } else {
-          // this.token = results.token;
-          console.log("connexion success");
-          this.$store.commit('saveToken', results.token);
-          // return true;
+      console.log("coucou Home");
+      this.reloadThreads = !this.reloadThreads;
+    }
+  },
+  created(){
+    console.log("created home");
+    if( localStorage.getItem('groupomaniaToken') ){
+      let config = {
+          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
         }
-      }
+
+        Axios.post("/user/autoLogin", {auto: true}, config )
+                //  .then( response => response.json() )
+              .then( res => {
+                console.log("res", res);
+                this.$store.dispatch('userInfo', res.data.user );
+                localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
+              });
+
+    }
   }
 }
 </script>

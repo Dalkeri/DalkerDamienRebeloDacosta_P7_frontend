@@ -4,7 +4,7 @@ export default createStore({
   state: {
     count: 0,
     token: '',
-    navMenu: 'none', //ajouter user pour stocker les infos de l'user 
+    navMenu: 'none',
     userConnected: '',
   },
   mutations: {
@@ -38,6 +38,9 @@ export default createStore({
       console.log("here");
     }
   },
+  // created: {
+  //   console.log("created vuex");
+  // },
   modules: {
   }
 })

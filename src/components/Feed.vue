@@ -2,7 +2,7 @@
   <div class="Feed">
     <div class="threads" v-if="datasFetched">
       <section class="thread" v-for="thread in threads" :key="thread.id">
-          <Thread :threadDatas="thread"/>
+          <Thread :threadDatas="thread"  @my-event="getThreads"/>
       </section>
       <!-- <Thread v-bind="threads"/> -->
     </div>
@@ -23,11 +23,20 @@ export default {
   components: {
     Thread
   },
+  props: {
+    reloadThreads: Boolean
+  },
   data: function() {
     return { 
       threads: [],
       datasFetched: false
-     };
+    };
+  },
+  watch: {
+    reloadThreads: function(newVal, oldVal) {
+      console.log("Feed reloadThread changed from ", oldVal, " to ", newVal);
+      this.getThreads();
+    }
   },
   methods: {
     updateThreads(){
@@ -38,10 +47,11 @@ export default {
       console.log("getThreads");
       axios.get("http://localhost:3000/api/thread/")
             .then(res => {
-              console.log(".then", res.data);
-              this.datasFetched = true;
-              // return res.data;
-              this.threads = res.data;
+                // console.log(".then", res.data);
+                this.datasFetched = true;
+                // return res.data;
+                this.threads = res.data;
+                // this.$emit("myEvent");
               })
             .catch(error => console.log("trouble while fetching datas: ", error));      
       }

@@ -27,10 +27,15 @@ export default {
       threadContent:"",
     };
   },
+  created(){
+    if( this.datas ){
+      this.threadTitle = this.datas.title,
+      this.threadContent = this.datas.content
+    }
+  },
   methods: {
       createThread(e){
         e.preventDefault();
-
         console.log("createThread");
 
         let threadInfos = {
@@ -42,34 +47,34 @@ export default {
           headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
         }
 
-        // console.log("config", config);
-
-        Axios.post("/thread/create", threadInfos, config )
+        if( !this.datas ) {
+          Axios.post("/thread/create", threadInfos, config )
                 //  .then( response => response.json() )
               .then( res => {
-                   
                 console.log("res", res);
-                this.$emit("myevent");
-                console.log("res2", res);
-
-                 
+                // this.$emit("myEvent");
+                this.resetValues();
               });
+        } else {
+          console.log("/thread/" + this.datas.id);
+          Axios.put("/thread/" + this.datas.id, threadInfos, config )
+                //  .then( response => response.json() )
+              .then( res => {
+                console.log("res", res);
+                if(res.status == 200){
+                  console.log("addThread emit myEvent");
+                  // this.$emit("myEvent");
+                }
+                // this.resetValues();
+              });
+        }
+                this.$emit("myEvent");
+        
 
-        // const res = await fetch( "http://localhost:3000/api/thread/modify", {
-        //                           method: 'POST',
-        //                           headers: {
-        //                           'Content-Type': 'application/json',
-        //                           },
-        //                           body: JSON.stringify(this.datas)
-        //                       })
-        // const results = await res.json();
-        // console.log("results", results);
-        // if(!res.ok){
-        //   console.log("error while fetching");
-        // } else {
-        //   this.datasFetched = true;
-        //   return results;
-        // }
+      },
+      resetValues(){
+        this.threadTitle = "",
+        this.threadContent = ""
       }
   }
 }
