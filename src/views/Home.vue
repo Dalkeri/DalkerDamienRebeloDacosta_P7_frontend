@@ -16,7 +16,6 @@ import Feed from '../components/Feed.vue'
 // import store from '../store/index.js'
 
 // import { mapState } from "vuex"
-import Axios from 'axios';
 
 export default {
   name: 'Home',
@@ -39,23 +38,6 @@ export default {
     updateThreads(){
       console.log("coucou Home");
       this.reloadThreads = !this.reloadThreads;
-    }
-  },
-  created(){
-    console.log("created home");
-    if( localStorage.getItem('groupomaniaToken') ){
-      let config = {
-          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
-        }
-
-        Axios.post("/user/autoLogin", {auto: true}, config )
-                //  .then( response => response.json() )
-              .then( res => {
-                console.log("res", res);
-                this.$store.dispatch('userInfo', res.data.user );
-                localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
-              });
-
     }
   }
 }

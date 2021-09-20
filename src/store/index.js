@@ -6,6 +6,7 @@ export default createStore({
     token: '',
     navMenu: 'none',
     userConnected: '',
+    actualRoute: 'home'
   },
   mutations: {
     increment (state) {
@@ -14,7 +15,7 @@ export default createStore({
     },
     saveToken (state, token){
       state.token = token;
-      console.log("state.token", state.token);
+      // console.log("state.token", state.token);
     },
     setStateHeader (state, value){
       if(state.navMenu !== value){
@@ -25,7 +26,11 @@ export default createStore({
     },
     setUserInfo(state, value){
       state.userConnected = value;
-      console.log("state", state);
+      // console.log("state", state);
+    },
+    setActualRoute(state, value){
+      state.actualRoute = value;
+      console.log("set actual route", value);
     }
   },
   actions: {
@@ -35,7 +40,11 @@ export default createStore({
     userInfo(context, state){
       context.commit('setUserInfo', state);
       context.commit('setStateHeader', "none");
-      console.log("here");
+      // console.log("here");
+    },
+    actualRoute(context, state){
+      console.log("actualroute", state);
+      context.commit('setActualRoute', state);
     }
   },
   // created: {

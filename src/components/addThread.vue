@@ -13,10 +13,12 @@
 
 <script>
 
-import Axios from 'axios';
+import Axios from 'axios'
+import { mapState } from "vuex"
 
 export default {
   name: 'addThread',
+
   props: {
     threadDatas: Object
   },
@@ -25,8 +27,15 @@ export default {
       datas: this.threadDatas,
       threadTitle:"",
       threadContent:"",
+      disable: true
     };
   },
+  computed: {
+        ...mapState({
+            userConnected: ({userConnected}) => userConnected
+            //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
+        }),
+    },
   created(){
     if( this.datas ){
       this.threadTitle = this.datas.title,
@@ -40,7 +49,8 @@ export default {
 
         let threadInfos = {
           title: this.threadTitle,
-          content: this.threadContent
+          content: this.threadContent,
+          UserId: this.userConnected.id
         }
 
         let config = {
@@ -52,23 +62,23 @@ export default {
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
-                // this.$emit("myEvent");
+                this.$emit("myEvent");
                 this.resetValues();
               });
         } else {
-          console.log("/thread/" + this.datas.id);
-          Axios.put("/thread/" + this.datas.id, threadInfos, config )
+          console.log("/thread/modify/" + this.datas.id);
+          Axios.put("/thread/modify/" + this.datas.id, threadInfos, config )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
                 if(res.status == 200){
                   console.log("addThread emit myEvent");
-                  // this.$emit("myEvent");
+                  this.$emit("myEvent");
                 }
                 // this.resetValues();
               });
         }
-                this.$emit("myEvent");
+        // this.$emit("myEvent");
         
 
       },
@@ -76,7 +86,27 @@ export default {
         this.threadTitle = "",
         this.threadContent = ""
       }
+      // validatedFields(){
+      //   if( this.threadTitle == "" || this.threadContent == ""){
+      //     this.disable = true;
+      //     console.log("1")
+      //   } else {
+      //     this.disable = false;
+      //     console.log("2")
+
+      //   }
+      // }
   }
+  // watch :{
+  //   threadTitle: function(newVal, oldVal) {
+  //     console.log(" reloadThread changed from ", oldVal, " to ", newVal);
+  //     this.validatedFields();
+  //   },
+  //   threadContent: function(newVal, oldVal) {
+  //     console.log(" reloadThread changed from ", oldVal, " to ", newVal);
+  //     this.validatedFields();
+  //   },
+  // }
 }
 
 </script>

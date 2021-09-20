@@ -10,7 +10,7 @@
       <p>par: {{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</p>
     </div>
     <div v-if="threadDatas.UserId == userConnected.id ">
-    <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button">Supprimer</button></span>
+    <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
     </div>
   </div>
 </template>
@@ -18,6 +18,8 @@
 <script>
 import addThread from '../components/addThread.vue'
 import { mapState } from "vuex"
+import Axios from 'axios'
+
 
 export default {
   name: 'Thread',
@@ -46,6 +48,23 @@ export default {
         console.log("Thread emit myEvent");
         this.modifyThread = false;
         this.$emit("myEvent");
+      },
+      deleteThread(){
+        console.log("Delete thread ",this.threadDatas.id);
+        let config = {
+          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
+        }
+
+        Axios.delete("/thread/" + this.threadDatas.id, config )
+                //  .then( response => response.json() )
+              .then( res => {
+                console.log("res", res);
+                if(res.status == 200){
+                  console.log("addThread emit myEvent");
+                  this.$emit("myEvent");
+                }
+                // this.resetValues();
+              });
       }
   }
 }
