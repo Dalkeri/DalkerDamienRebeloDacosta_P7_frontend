@@ -147,7 +147,10 @@ export default {
             
             Axios.post("/user/signup", signUpInfo )
                 //  .then( response => response.json() )
-                 .then( res => console.log("res", res));
+                 .then( res => {
+                     console.log("res", res)
+                     
+                });
         
 
             // let res = await Axios.post('http://localhost:3000/signup/', signUpInfo);

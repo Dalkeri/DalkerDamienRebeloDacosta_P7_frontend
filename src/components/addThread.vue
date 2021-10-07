@@ -50,7 +50,7 @@ export default {
         let threadInfos = {
           title: this.threadTitle,
           content: this.threadContent,
-          UserId: this.userConnected.id
+          userId: this.userConnected.id
         }
 
         let config = {

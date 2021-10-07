@@ -7,9 +7,9 @@
     <div v-else>
       <h3>{{ threadDatas.title }}</h3>
       <p>{{ threadDatas.content }}</p>
-      <p>par: {{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</p>
+      <!-- <p>par: {{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</p> -->
     </div>
-    <div v-if="threadDatas.UserId == userConnected.id ">
+    <div v-if="threadDatas.userId == userConnected.id ">
     <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
     </div>
   </div>
