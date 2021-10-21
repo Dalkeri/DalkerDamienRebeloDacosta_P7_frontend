@@ -10,7 +10,7 @@
         <addComment :commentDatas="commentDatas.content" :commentId="commentDatas.id"/>
       </div>
     </div>
-    <div v-if="commentDatas.userId == userConnected.id ">
+    <div v-if="commentDatas.userId == userConnected.id || userConnected.admin">
       <span><button type="button" v-on:click="modifyComment = !modifyComment">Modifier</button><button type="button" v-on:click="deleteComment">Supprimer</button></span>
     </div>
   </div>

@@ -1,6 +1,7 @@
 <template>
   <div class="Thread d-flex justify-content-center">
     <div class="card border-primary mb-4">
+      ====================================
       <div class="card-header">{{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</div>
       <div  class="card-body">
         <div v-if="modifyThread">
@@ -11,8 +12,8 @@
           <p class="card-text">{{ threadDatas.content }}</p>
         </div>
 
-        <!-- buttons if owner -->
-        <div v-if="threadDatas.userId == userConnected.id ">
+        <!-- buttons if owner or admin -->
+        <div v-if="threadDatas.userId == userConnected.id || userConnected.admin">
         <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
         </div>
 
