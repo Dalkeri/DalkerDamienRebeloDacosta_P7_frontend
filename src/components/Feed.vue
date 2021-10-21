@@ -56,6 +56,9 @@ export default {
             .catch(error => console.log("trouble while fetching datas: ", error));      
       }
   },
+  getOneThread(){
+
+  },
   created(){
     this.getThreads();
     // this.threads = await this.getThreads();

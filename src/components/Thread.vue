@@ -1,29 +1,47 @@
 <template>
-  <div class="Thread">
-    <h4>==================================================</h4>
-    <div v-if="modifyThread">
-      <addThread :threadDatas="threadDatas" @my-event="updateThreads" />
-    </div>
-    <div v-else>
-      <h3>{{ threadDatas.title }}</h3>
-      <p>{{ threadDatas.content }}</p>
-      <!-- <p>par: {{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</p> -->
-    </div>
-    <div v-if="threadDatas.userId == userConnected.id ">
-    <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
+  <div class="Thread d-flex justify-content-center">
+    <div class="card border-primary mb-4">
+      <div class="card-header">{{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</div>
+      <div  class="card-body">
+        <div v-if="modifyThread">
+          <addThread :threadDatas="threadDatas" @my-event="updateThreads" />
+        </div>
+        <div v-else>
+          <h4 class="card-title">{{ threadDatas.title }}</h4>
+          <p class="card-text">{{ threadDatas.content }}</p>
+        </div>
+
+        <!-- buttons if owner -->
+        <div v-if="threadDatas.userId == userConnected.id ">
+        <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
+        </div>
+
+        <!-- comments -->
+        <div v-if="threadDatas.Comments">
+          <div class="comments" v-for="comment in threadDatas.Comments" :key="comment.id">
+            <Comment :commentDatas="comment" :id="threadDatas.id" />
+          </div>
+        </div>
+
+        <!-- add comment -->
+        <addComment />
+      
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import addThread from '../components/addThread.vue'
+import Comment from './Comment.vue'
+import addComment from './addComment.vue'
 import { mapState } from "vuex"
 import Axios from 'axios'
 
 
 export default {
   name: 'Thread',
-  props: {
+  props: { 
     threadDatas: Object
   },
   data: function() {
@@ -35,7 +53,9 @@ export default {
       // console.log("props", this.threadDatas);
   },
   components: {
-    addThread
+    addThread,
+    Comment,
+    addComment
   },
   computed: {
         ...mapState({
@@ -69,3 +89,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .card {
+    /* box-shadow: 5px 5px 10px rgba(55, 94, 148, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.4); */
+    box-shadow: 5px 5px 10px rgba(43, 58, 77, 0.51), -5px -5px 10px rgba(255, 255, 255, 0.4);
+    
+    width: 80% !important;
+    background-color: #9ebeca !important;
+    color: #091f43 !important;
+  }
+</style>

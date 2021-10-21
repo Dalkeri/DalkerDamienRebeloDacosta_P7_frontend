@@ -4,9 +4,9 @@
             <div>img</div>
             <div v-if="userConnected == ''">
                 <span>
-                    <button type="button" v-on:click="signupForm">S'inscrire</button>
+                    <button type="button" class="btn btn-secondary" v-bind:class="{active: SUBtn}" v-on:click="signupForm">S'inscrire</button>
                     |
-                    <button type="button" v-on:click="loginForm">Se connecter</button>
+                    <button type="button" class="btn btn-secondary" v-bind:class="{active: SIBtn}" v-on:click="loginForm">Se connecter</button>
                 </span>
                 <!-- component connect -->
                 <div v-if="navMenu == 'connectUser'">
@@ -73,7 +73,11 @@ export default {
             errorMessage:"",
 
             SIEmail:"",
-            SIPassword:""
+            SIPassword:"",
+
+
+            SUBtn: false,
+            SIBtn: false
         }
     },
     computed: {
@@ -87,10 +91,14 @@ export default {
     methods: {
         loginForm() {
             // console.log("login");
+            this.SIBtn = !this.SIBtn;
+            this.SUBtn = false;
             this.$store.dispatch('stateHeader', 'connectUser')
         },
         signupForm(){
             // console.log("signin");
+            this.SUBtn = !this.SUBtn;
+            this.SIBtn = false;
             this.$store.dispatch('stateHeader', 'createUser')
         },
         signIn(e){
@@ -171,3 +179,20 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+    .btn{
+
+        background-color: #9ebeca !important;
+        color: #091f43 !important;
+    }
+
+    .true{
+        /* background-color: #d1515a !important; */
+        outline: 0;
+        /* box-shadow: 0 0 0 0.25rem rgba(43, 58, 77, 0.51); */
+        /* box-shadow: 0 0 0 0.25rem rgba(55, 141, 252, 0.25); */
+        box-shadow: 0 0 0 0.25rem rgba(209, 81, 90, 0.88);
+        border-color: #d1515a !important;
+    }
+</style>
