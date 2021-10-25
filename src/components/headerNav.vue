@@ -182,17 +182,23 @@ export default {
 
 <style scoped>
     .btn{
-
-        background-color: #9ebeca !important;
+        box-shadow: 5px 5px 10px rgb(17 18 18 / 35%), -5px -5px 10px rgb(240 141 141 / 40%);
+        /* box-shadow: 5px 5px 10px rgb(209 81 90 / 100%), -5px -5px 10px rgb(240 141 141 / 40%); */
+        background-color: #e1e5e6 !important;
         color: #091f43 !important;
+    }
+    .btn.active{
+        /* box-shadow: inset 0 3px 5px rgb(17 18 18 /35%); */
+        box-shadow: inset 0 3px 5px rgb(17 18 18 /65%);
     }
 
     .true{
         /* background-color: #d1515a !important; */
-        outline: 0;
+        /* outline: 0; a */
         /* box-shadow: 0 0 0 0.25rem rgba(43, 58, 77, 0.51); */
         /* box-shadow: 0 0 0 0.25rem rgba(55, 141, 252, 0.25); */
-        box-shadow: 0 0 0 0.25rem rgba(209, 81, 90, 0.88);
-        border-color: #d1515a !important;
+        
+        /* box-shadow: 0 0 0 0.25rem rgba(17, 18, 18, 0.35); a*/
+        /* border-color: #d1515a !important; a*/
     }
 </style>
