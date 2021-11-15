@@ -111,7 +111,7 @@ export default {
                         console.log("res", res);
                         this.$store.dispatch('userInfo', res.data.user );
                         localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
-
+                        //add dispatch(requestConfig)
                  });
         },
         disconnect(){

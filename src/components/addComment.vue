@@ -44,6 +44,7 @@ export default {
                 threadId: this.threadId,
                 userId: this.userConnected.id
             };
+            console.log({commentInfos});
             let config = {
                 headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
             };

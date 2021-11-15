@@ -10,6 +10,9 @@
         <div v-else>
           <h4 class="card-title">{{ threadDatas.title }}</h4>
           <p class="card-text">{{ threadDatas.content }}</p>
+          <div v-if="threadDatas.image">
+            <img :src="threadDatas.image" alt="image of the thread">
+          </div>
         </div>
 
         <!-- buttons if owner or admin -->
@@ -25,7 +28,7 @@
         </div>
 
         <!-- add comment -->
-        <addComment />
+        <addComment :threadId="threadDatas.id" />
       
       </div>
     </div>

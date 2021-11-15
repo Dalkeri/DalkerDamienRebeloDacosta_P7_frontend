@@ -6,3 +6,10 @@ export default axios.create({
     "Content-type": "application/json"
   }
 });
+
+
+// TODO add this here 
+// let config = {
+//           headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
+//         } 
+        

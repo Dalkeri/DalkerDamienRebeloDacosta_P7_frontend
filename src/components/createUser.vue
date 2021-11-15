@@ -8,9 +8,9 @@
                 <label for="lname">Prenom:</label><br>
                 <input type="text" id="lname" name="lname" value="Prenom"><br>
                 <label for="lname">Email:</label><br>
-                <input type="text" id="lname" name="lname" value="Email"><br>
+                <input type="text" id="email" name="email" value="Email"><br>
                 <label for="lname">Mot de passe:</label><br>
-                <input type="text" id="lname" name="lname" value="Mot de passe"><br><br>
+                <input type="text" id="pwd" name="pwd" value="Mot de passe"><br><br>
                 <input type="submit" value="Inscription">
             </form> 
         </div>

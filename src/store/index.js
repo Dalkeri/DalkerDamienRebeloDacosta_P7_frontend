@@ -26,6 +26,7 @@ export default createStore({
     },
     setUserInfo(state, value){
       state.userConnected = value;
+      //ADD setRequestConfig
       // console.log("state", state);
     },
     setActualRoute(state, value){
