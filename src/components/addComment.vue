@@ -12,8 +12,8 @@ export default {
   name: 'addComment',
   props: {
     commentDatas: Object,
-    commentId: Object,
-    threadId: Object,
+    commentId: Number,
+    threadId: Number,
   },
   data: function() {
     return { 
@@ -23,6 +23,7 @@ export default {
     //   commentId: this.idComment,
     };
   },
+  
   computed: {
         ...mapState({
             userConnected: ({userConnected}) => userConnected

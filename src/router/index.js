@@ -1,10 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
 import Account from '../views/Account.vue'
 
 const routes = [
   {
     path: '/',
+    name: 'Welcome',
+    component: Welcome,
+    meta: {
+      title: "Login page",
+      metaTags: [
+        {
+          name: 'Login page',
+          content: 'The login / signup page of our example app.'
+        },
+        {
+          property: 'og:description',
+          content: 'The login / signup page of our example app.'
+        }
+      ]
+    }
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
     meta: {
