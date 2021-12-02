@@ -47,7 +47,7 @@ import { mapState } from "vuex"
 
 
 export default {
-    name: 'headerNav',
+    name: 'Welcome',
     data() {
         return {
             SULName:"",
@@ -103,8 +103,8 @@ export default {
                         // localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                         // this.$router.push('home');
                         this.connect(res.data);
-
-                        //add dispatch(requestConfig)
+                        console.log(res.data.token);
+                        this.$store.dispatch('requestConfig', res.data.token);
                  })
                  .catch(error => console.log({error}));
         },
@@ -131,6 +131,7 @@ export default {
                     console.log("res", res)
                     if(res.status == 201){
                         this.connect(res.data);
+                        this.$store.dispatch('requestConfig', res.data.token);
                     }
                 })
                 .catch(error => console.log({error}));

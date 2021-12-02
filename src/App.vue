@@ -21,7 +21,7 @@
 // import createUser from './components/createUser.vue'
 // import connectUser from './components/connectUser.vue'
 import headerNav from './components/headerNav.vue'
-import Axios from 'axios';
+import Axios from 'axios'
 
 export default {
   components: {
@@ -35,13 +35,13 @@ export default {
       let config = {
           headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
         }
-        console.log("autoLogin", config);
         Axios.post("/user/autoLogin", {auto: true}, config )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res.data);
                 this.$store.dispatch('userInfo', res.data.user );
                 localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
+                this.$store.dispatch('requestConfig',localStorage.getItem('groupomaniaToken'));
               })
               .catch(err => console.log(err.response));
 

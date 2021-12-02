@@ -2,7 +2,7 @@
   <div class="Feed">
     <div class="threads" v-if="datasFetched">
       <section class="thread" v-for="thread in threads" :key="thread.id">
-          <Thread :threadDatas="thread"  @my-event="getThreads"/>
+          <Thread :thread="thread"  @my-event="getThreads"/>
       </section>
       <!-- <Thread v-bind="threads"/> -->
     </div>

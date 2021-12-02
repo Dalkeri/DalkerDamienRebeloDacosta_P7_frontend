@@ -1,5 +1,5 @@
 <template>
-  <div class="addComment">
+  <div class="AddComment">
     <input type="text" v-model="commentContent" id="commentContent" name="commentContent">
     <button type="button" v-on:click="createComment">Commenter</button>
   </div>
@@ -7,34 +7,41 @@
 
 <script>
 import Axios from 'axios'
-import { mapState } from "vuex"
+import { mapState, mapGetters } from "vuex"
+
 export default {
-  name: 'addComment',
+  name: 'AddComment',
   props: {
-    commentDatas: Object,
+    comment: Object,
     commentId: Number,
     threadId: Number,
   },
   data: function() {
     return { 
-    //   datas: this.commentDatas,
+    //   datas: this.comment,
       commentContent:"",
     //   threadId: this.idThread,
     //   commentId: this.idComment,
     };
   },
-  
   computed: {
         ...mapState({
             userConnected: ({userConnected}) => userConnected
         }),
-    },
+        ...mapGetters([
+          'getRequestConfig'
+        ])
+  },
   created(){
-    // if( this.commentDatas ){
-      this.commentContent = this.commentDatas
+    // if( this.comment ){
+      this.commentContent = this.comment
     // }
   },
   methods: {
+    updateThread(){
+        console.log("addComment emit myEvent");
+        this.$emit("myEvent");
+    },
     createComment(e){
         e.preventDefault();
         console.log("ajout de commentaire", this.commentContent);
@@ -46,20 +53,21 @@ export default {
                 userId: this.userConnected.id
             };
             console.log({commentInfos});
-            let config = {
-                headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
-            };
+
+            console.log("request", this.$store.getters.getRequestConfig);
+
             //if we didn't get props it's a new comment
-            if( !this.commentDatas ){
-                Axios.post("/comment/create/",  commentInfos, config )
+            if( !this.comment ){
+                Axios.post("/comment/create/",  commentInfos, this.$store.getters.getRequestConfig )
                     .then( res => {
                         console.log("res", res);
                         if(res.status == 200){
-                        // this.updateThreads();
+                          //envoyer le contenu en event au parent thread puis au parent feed pour add au tableau
+                        // this.updateThread();
                         }
                     }); 
-            } else {                            //ternaire au lieu de if else ou if normal
-                Axios.put("/comment/modify/" + this.commentId, commentInfos, config )
+            } else {    //ternaire au lieu de if else ou if normal
+                Axios.put("/comment/modify/" + this.commentId, commentInfos, this.$store.getters.getRequestConfig )
                 //  .then( response => response.json() )
                 .then( res => {
                     console.log("res", res);

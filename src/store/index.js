@@ -6,12 +6,27 @@ export default createStore({
     token: '',
     navMenu: 'none',
     userConnected: '',
-    actualRoute: 'home'
+    actualRoute: 'home',
+    requestConfig: {}
+  },
+  getters:{
+    getRequestConfig: state => {
+      console.log("GET REQUEST CONFIG");
+      let config = JSON.stringify(state.requestConfig);
+      return JSON.parse(config);
+    }
   },
   mutations: {
-    increment (state) {
-      state.count++;
-      console.log(state.count);
+    // increment (state) {
+    //   state.count++;
+    //   console.log(state.count);
+    // },
+    setRequestConfig(state, config){
+      state.requestConfig = {
+        headers: { 
+          Authorization: "Bearer " + JSON.parse(config)
+        }
+      }
     },
     saveToken (state, token){
       state.token = token;
@@ -46,6 +61,10 @@ export default createStore({
     actualRoute(context, state){
       console.log("actualroute", state);
       context.commit('setActualRoute', state);
+    },
+    requestConfig(context, state){
+      console.log("setRequestConfig", state);
+      context.commit('setRequestConfig', state);
     }
   },
   // created: {

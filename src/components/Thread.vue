@@ -2,33 +2,33 @@
   <div class="Thread d-flex justify-content-center">
     <div class="card border-primary mb-4">
       ====================================
-      <div class="card-header">{{ threadDatas.User.firstName + " " + threadDatas.User.lastName}}</div>
+      <div class="card-header">{{ thread.User.firstName + " " + thread.User.lastName}}</div>
       <div  class="card-body">
         <div v-if="modifyThread">
-          <addThread :threadDatas="threadDatas" @my-event="updateThreads" />
+          <addThread :thread="thread" @my-event="updateThreads" />
         </div>
         <div v-else>
-          <h4 class="card-title">{{ threadDatas.title }}</h4>
-          <p class="card-text">{{ threadDatas.content }}</p>
-          <div v-if="threadDatas.image">
-            <img :src="threadDatas.image" alt="image of the thread">
+          <h4 class="card-title">{{ thread.title }}</h4>
+          <p class="card-text">{{ thread.content }}</p>
+          <div v-if="thread.image">
+            <img :src="thread.image" alt="image of the thread">
           </div>
         </div>
 
         <!-- buttons if owner or admin -->
-        <div v-if="threadDatas.userId == userConnected.id || userConnected.admin">
+        <div v-if="thread.userId == userConnected.id || userConnected.admin">
         <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
         </div>
 
         <!-- comments -->
-        <div v-if="threadDatas.Comments">
-          <div class="comments" v-for="comment in threadDatas.Comments" :key="comment.id">
-            <Comment :commentDatas="comment" :id="threadDatas.id" />
+        <div v-if="thread.Comments">
+          <div class="comments" v-for="comment in thread.Comments" :key="comment.id">
+            <Comment :comment="comment" :id="thread.id" />
           </div>
         </div>
 
         <!-- add comment -->
-        <addComment :threadId="threadDatas.id" />
+        <AddComment :threadId="thread.id" />
       
       </div>
     </div>
@@ -38,13 +38,14 @@
 <script>
 import addThread from '../components/addThread.vue'
 import Comment from './Comment.vue'
-import addComment from './addComment.vue'
-import { mapState } from "vuex"
+import AddComment from './AddComment.vue'
+import { mapState, mapGetters } from "vuex"
 import Axios from 'axios'
+
 export default {
   name: 'Thread',
   props: { 
-    threadDatas: Object
+    thread: Object
   },
   data: function() {
     return { 
@@ -52,18 +53,21 @@ export default {
      };
   },
   created(){
-      // console.log("props", this.threadDatas);
+      // console.log("props", this.thread);
   },
   components: {
     addThread,
     Comment,
-    addComment
+    AddComment
   },
   computed: {
         ...mapState({
             userConnected: ({userConnected}) => userConnected
             //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
         }),
+        ...mapGetters([
+          'getRequestConfig'
+        ])
     },
   methods: {
       updateThreads(){
@@ -72,11 +76,9 @@ export default {
         this.$emit("myEvent");
       },
       deleteThread(){
-        console.log("Delete thread ",this.threadDatas.id);
-        let config = {
-          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
-        }
-        Axios.delete("/thread/" + this.threadDatas.id, config )
+        console.log("Delete thread ",this.thread.id);
+ 
+        Axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);

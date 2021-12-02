@@ -6,7 +6,7 @@
         <label for="lname">Content:</label><br>
         <input type="textarea" v-model="threadContent" id="threadContent"  name="threadContent"><br><br> 
         <label>File</label><br>
-        <input type="file" @change="handleFileUpload( $event )"/><br>
+        <input type="file" id="uploadFile" @change="handleFileUpload( $event )"/><br>
         <input type="submit" value="Poster">
     </form> 
   </div>
@@ -15,17 +15,17 @@
 <script>
 
 import Axios from 'axios'
-import { mapState } from "vuex"
+import { mapState, mapGetters } from "vuex"
 
 export default {
   name: 'addThread',
 
   props: {
-    threadDatas: Object
+    thread: Object
   },
   data: function() {
     return { 
-      datas: this.threadDatas,
+      datas: this.thread,
       threadTitle:"",
       threadContent:"",
       disable: true,
@@ -37,6 +37,9 @@ export default {
             userConnected: ({userConnected}) => userConnected
             //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
         }),
+        ...mapGetters([
+          'getRequestConfig'
+        ])
     },
   created(){
     if( this.datas ){
@@ -63,16 +66,7 @@ export default {
           // userId: this.userConnected.id,
           contentImg: this.file
         };
-
         // console.log("threadInfos", threadInfos);
-
-        let config = {
-          headers: { 
-            Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))
-            // 'Content-Type': this.file.type
-            
-          }
-        }
 
         console.log("threadInfos", threadInfos);
         // console.log("formdata", formData);
@@ -83,7 +77,7 @@ export default {
         //new creation
         if( !this.datas ) {
           // Axios.post("/thread/create", threadInfos, config )
-          Axios.post("/thread/create", formData, config )
+          Axios.post("/thread/create", formData, this.$store.getters.getRequestConfig )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
@@ -93,13 +87,14 @@ export default {
         } else { //modification
           console.log("/thread/modify/" + this.datas.id);
           // Axios.put("/thread/modify/" + this.datas.id, threadInfos, config )
-          Axios.put("/thread/modify/" + this.datas.id, formData, config )
+          Axios.put("/thread/modify/" + this.datas.id, formData, this.$store.getters.getRequestConfig )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
                 if(res.status == 200){
                   console.log("addThread emit myEvent");
                   this.$emit("myEvent");
+                  this.resetValues();
                 }
                 // this.resetValues();
               });
@@ -109,8 +104,8 @@ export default {
 
       },
       resetValues(){
-        this.threadTitle = "",
-        this.threadContent = ""
+        let form = document.getElementsByTagName("form")[0];
+        form.reset();
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];
