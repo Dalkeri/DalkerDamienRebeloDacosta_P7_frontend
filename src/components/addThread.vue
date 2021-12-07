@@ -106,7 +106,7 @@ export default {
       resetValues(){
         //two way bindings
         // let form = document.getElementsByTagName("form")[0];
-        // form.reset();
+        // form.reset(); 
         this.threadTitle = "";
         this.threadContent = "";
         this.file = "";
