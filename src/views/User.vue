@@ -1,12 +1,12 @@
 <template>
-  <img :src="userConnected.profilPic" alt="Profil picture">
+  <img :src="user.profilPic" alt="Profil picture">
   <br>
-  <h3>{{ userConnected.firstName }} {{ userConnected.lastName }}</h3>
+  <h3>{{ user.firstName }} {{ user.lastName }}</h3>
   <br>
-  <strong>{{ userConnected.bio }}</strong>
+  <strong>{{ user.bio }}</strong>
   <div class="container">
     <ul class="nav nav-pills flex-column">
-      <li class="nav-item">
+      <li class="nav-item" v-if="userConnected.admin">
         <a class="nav-link" :class="{ active: accountActive }"   v-on:click="changeMenuItem('account')">Modifier mon profil</a>
           <div v-if="navItem == 'account'" class="card border-secondary mb-3">
             <!-- <img :src="userConnected.profilPic" alt="Profil picture"> -->
@@ -61,10 +61,11 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import Axios from 'axios';
+import { useRoute } from 'vue-router';
 
 
 export default {
-  name: 'Account',
+  name: 'User',
 
   data: function() {
     return { 
@@ -80,14 +81,43 @@ export default {
       passwordForm: false,
       oldPassword: '',
       newPassword: '',
+
+      user: '',
+      route: '',
     };
   },
-   computed: {
+  created(){
+    this.route = useRoute();
+    console.log(this.route.params);
+    
+    //IF route.params.id ==  connectedUser.userId go to account route
+    // console.log("userConnected created", this.userConnected);
+    // console.log(this.route.params.id == this.userConnected.userId);    
+
+     let config = {
+          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
+     }
+    console.log(config);
+    Axios.post("/user/getUserById", this.route.params, config)
+         .then( res => {
+            console.log(res);
+            this.user = res.data.user; 
+         });
+  },
+  updated(){
+    console.log("userConnected updated", this.userConnected);
+    console.log(this.userConnected.id);
+    if (this.userConnected.id == this.route.params.id) {
+      this.$router.replace("/account");
+    }
+  },
+  computed: {
         ...mapState({
             userConnected: ({userConnected}) => userConnected
         }),
         ...mapGetters([
           'getRequestConfig',
+          'getUserId',
         ])
   },
   methods: {

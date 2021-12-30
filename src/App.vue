@@ -38,7 +38,7 @@ export default {
         Axios.post("/user/autoLogin", {auto: true}, config )
                 //  .then( response => response.json() )
               .then( res => {
-                console.log("res", res.data);
+                // console.log("res", res.data);
                 this.$store.dispatch('userInfo', res.data.user );
                 localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                 this.$store.dispatch('requestConfig',localStorage.getItem('groupomaniaToken'));

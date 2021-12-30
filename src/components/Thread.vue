@@ -92,3 +92,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .card {
+    /* box-shadow: 5px 5px 10px rgba(55, 94, 148, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.4); */
+    box-shadow: 5px 5px 10px rgba(43, 58, 77, 0.51), -5px -5px 10px rgba(255, 255, 255, 0.4);
+    /* box-shadow: 5px 5px 10px rgba(209, 81, 90, 1), -5px -5px 10px rgba(255, 255, 255, 0.4); */
+    
+    width: 80% !important;
+    background-color: #e1e5e6 !important;
+    color: #091f43 !important;
+  }
+</style>

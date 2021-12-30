@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
 import Account from '../views/Account.vue'
+import User from '../views/User.vue'
 
 const routes = [
   {
@@ -62,7 +63,26 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+  },
+  {
+    path: '/user/:id',
+    name: 'User',
+    component: User,
+    meta: {
+      // transition: 'slide-right',
+      title: 'User page',
+      metaTags: [
+        {
+          name: 'User page',
+          content: 'A user page.'
+        },
+        {
+          property: 'og:description',
+          content: 'A user page.'
+        }
+      ]
+    }
+  },
 ]
 
 const router = createRouter({

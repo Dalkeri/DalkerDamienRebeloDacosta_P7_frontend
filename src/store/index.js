@@ -14,6 +14,14 @@ export default createStore({
       console.log("GET REQUEST CONFIG");
       let config = JSON.stringify(state.requestConfig);
       return JSON.parse(config);
+    },
+    getUserBio: state => {
+      console.log("getUserBio");
+      return state.userConnected.bio;
+    },
+    getUserId: state => {
+      console.log('getUserId', state.userConnected.id);
+      return state.userConnected.id;
     }
   },
   mutations: {
@@ -22,11 +30,17 @@ export default createStore({
     //   console.log(state.count);
     // },
     setRequestConfig(state, config){
-      state.requestConfig = {
-        headers: { 
-          Authorization: "Bearer " + JSON.parse(config)
+      // console.log("config", config);
+      if(config) {
+        state.requestConfig = {
+          headers: { 
+            Authorization: "Bearer " + JSON.parse(config)
+          }
         }
+      } else {
+        state.requestConfig = "";
       }
+      
     },
     saveToken (state, token){
       state.token = token;
@@ -63,7 +77,7 @@ export default createStore({
       context.commit('setActualRoute', state);
     },
     requestConfig(context, state){
-      console.log("setRequestConfig", state);
+      // console.log("setRequestConfig", state);
       context.commit('setRequestConfig', state);
     }
   },

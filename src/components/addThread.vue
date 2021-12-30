@@ -104,12 +104,13 @@ export default {
 
       },
       resetValues(){
+        console.log("reset values");
         //two way bindings
-        // let form = document.getElementsByTagName("form")[0];
-        // form.reset(); 
-        this.threadTitle = "";
-        this.threadContent = "";
-        this.file = "";
+        let form = document.getElementsByTagName("form")[0];
+        form.reset(); 
+        // this.threadTitle = "";
+        // this.threadContent = "";
+        // this.file = "";
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];

@@ -1,9 +1,9 @@
 <template>
   <!-- <div v-if="userConnected == ''"> -->
     <span>
-        <button type="button" v-on:click="signupForm">S'inscrire</button>
+        <button type="button"  class="btn btn-secondary" v-bind:class="{active: SUBtn}" v-on:click="signupForm">S'inscrire</button>
                     |
-        <button type="button" v-on:click="loginForm">Se connecter</button>
+        <button type="button"  class="btn btn-secondary" v-bind:class="{active: SIBtn}" v-on:click="loginForm">Se connecter</button>
         </span>
         <!-- component connect -->
         <div v-if="navMenu == 'connectUser'">
@@ -59,7 +59,10 @@ export default {
             errorMessage:"",
 
             SIEmail:"",
-            SIPassword:""
+            SIPassword:"",
+
+            SUBtn: false,
+            SIBtn: false
         }
     },
     computed: {
@@ -72,11 +75,15 @@ export default {
     methods: {
         loginForm() {
             // console.log("login");
-            this.$store.dispatch('stateHeader', 'connectUser')
+            this.$store.dispatch('stateHeader', 'connectUser');
+            this.SIBtn = !this.SIBtn;
+            this.SUBtn = false;
         },
         signupForm(){
             // console.log("signin");
-            this.$store.dispatch('stateHeader', 'createUser')
+            this.$store.dispatch('stateHeader', 'createUser');
+            this.SUBtn = !this.SUBtn;
+            this.SIBtn = false;
         },
         connect(datas){
             this.$store.dispatch('userInfo', datas.user );
@@ -103,8 +110,8 @@ export default {
                         // localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                         // this.$router.push('home');
                         this.connect(res.data);
-                        console.log(res.data.token);
-                        this.$store.dispatch('requestConfig', res.data.token);
+                        console.log("113", res.data.token);
+                        this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
                  })
                  .catch(error => console.log({error}));
         },
@@ -140,3 +147,26 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+    .btn{
+        box-shadow: 5px 5px 10px rgb(17 18 18 / 35%), -5px -5px 10px rgb(240 141 141 / 40%);
+        /* box-shadow: 5px 5px 10px rgb(209 81 90 / 100%), -5px -5px 10px rgb(240 141 141 / 40%); */
+        background-color: #e1e5e6 !important;
+        color: #091f43 !important;
+    }
+    .btn.active{
+        /* box-shadow: inset 0 3px 5px rgb(17 18 18 /35%); */
+        box-shadow: inset 0 3px 5px rgb(17 18 18 /65%);
+    }
+
+    .true{
+        /* background-color: #d1515a !important; */
+        /* outline: 0; a */
+        /* box-shadow: 0 0 0 0.25rem rgba(43, 58, 77, 0.51); */
+        /* box-shadow: 0 0 0 0.25rem rgba(55, 141, 252, 0.25); */
+        
+        /* box-shadow: 0 0 0 0.25rem rgba(17, 18, 18, 0.35); a*/
+        /* border-color: #d1515a !important; a*/
+    }
+</style>
