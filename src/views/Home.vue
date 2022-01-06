@@ -1,4 +1,5 @@
 <template>
+  <headerNav />
   <div class="home">
     <h1>Welcome to this social website</h1>
     <h2>This is your feed, you'll see every post in there</h2>
@@ -11,8 +12,10 @@
 
 <script>
 // @ is an alias to /src
-import addThread from '../components/addThread.vue'
-import Feed from '../components/Feed.vue'
+import addThread from '../components/addThread.vue';
+import Feed from '../components/Feed.vue';
+import headerNav from '../components/headerNav.vue';
+
 // import store from '../store/index.js'
 
 // import { mapState } from "vuex"
@@ -20,6 +23,7 @@ import Feed from '../components/Feed.vue'
 export default {
   name: 'Home',
   components: {
+    headerNav,
     Feed,
     addThread
   },
@@ -27,6 +31,9 @@ export default {
     return { 
       reloadThreads: false
     };
+  },
+  created(){
+    console.log("CREATED HOME");
   },
   methods: {
     // login: function () {

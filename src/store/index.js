@@ -11,16 +11,16 @@ export default createStore({
   },
   getters:{
     getRequestConfig: state => {
-      console.log("GET REQUEST CONFIG");
+      // console.log("GET REQUEST CONFIG");
       let config = JSON.stringify(state.requestConfig);
       return JSON.parse(config);
     },
     getUserBio: state => {
-      console.log("getUserBio");
+      // console.log("getUserBio");
       return state.userConnected.bio;
     },
     getUserId: state => {
-      console.log('getUserId', state.userConnected.id);
+      // console.log('getUserId', state.userConnected.id);
       return state.userConnected.id;
     }
   },

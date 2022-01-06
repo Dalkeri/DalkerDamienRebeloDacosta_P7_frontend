@@ -4,7 +4,7 @@
     <div> | </div> 
     <connectUser /> -->
 
-    <headerNav />
+    <!-- <headerNav /> -->
 
     <!-- <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> -->
@@ -20,12 +20,12 @@
 <script>
 // import createUser from './components/createUser.vue'
 // import connectUser from './components/connectUser.vue'
-import headerNav from './components/headerNav.vue'
+// import headerNav from './components/headerNav.vue'
 import Axios from 'axios'
 
 export default {
   components: {
-    headerNav
+    // headerNav
     // createUser,
     // connectUser
   },

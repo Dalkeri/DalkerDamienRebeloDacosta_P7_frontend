@@ -3,6 +3,7 @@ import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
 import Account from '../views/Account.vue'
 import User from '../views/User.vue'
+import Thread from '../views/Thread.vue'
 
 const routes = [
   {
@@ -79,6 +80,25 @@ const routes = [
         {
           property: 'og:description',
           content: 'A user page.'
+        }
+      ]
+    }
+  },
+  {
+    path: '/thread/:id',
+    name: 'Thread',
+    component: Thread,
+    meta: {
+      // transition: 'slide-right',
+      title: 'Thread page',
+      metaTags: [
+        {
+          name: 'Thread page',
+          content: 'A thread page.'
+        },
+        {
+          property: 'og:description',
+          content: 'A thread page.'
         }
       ]
     }

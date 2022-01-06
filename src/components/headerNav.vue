@@ -1,20 +1,22 @@
 <template>
     <div class="headerNav">
-        <div v-if=" actualRoute == 'home'">
-            <div v-if="userConnected != ''">
+        <div v-if="homepage">
+            <div>
                 <div>img</div>
-                <router-link to="/account" v-on:click="routeChanged('account')">Mon compte</router-link>
+                <router-link to="/account">Mon compte</router-link>
                 <button type="button" v-on:click="disconnect">se déconnecter</button>
             </div>
         </div>
         <div v-else>
-            <router-link to="/home" v-on:click="routeChanged('home')">Retour à l'accueil</router-link>
+            <router-link to="/home">Retour à l'accueil</router-link>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState } from "vuex";
+// import { useRoute } from 'vue-router';
+
 // import Axios from 'axios';
 
 
@@ -31,16 +33,43 @@ export default {
             errorMessage:"",
 
             SIEmail:"",
-            SIPassword:""
+            SIPassword:"",
+
+            homepage: false,
         }
     },
     computed: {
         ...mapState({
             navMenu: ({ navMenu }) => navMenu,
             userConnected: ({userConnected}) => userConnected,
-            actualRoute: ({actualRoute}) => actualRoute
-            //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
+            // actualRoute: ({actualRoute}) => actualRoute
+            
         }),
+    },
+    created(){
+        // let route = useRoute();
+        console.log("headernav created", this.$route.path);
+        if(this.$route.path == "/home"){
+            this.homepage = true;
+        } else {
+            this.homepage = false;
+        }
+    },
+    mouted(){
+        console.log("headernav mounted", this.$route.path);
+        if(this.$route.path == "/home"){
+            this.homepage = true;
+        } else {
+            this.homepage = false;
+        }
+    },
+    updated(){
+        console.log("headernav  updated", this.$route.path);
+        if(this.$route.path == "/home"){
+            this.homepage = true;
+        } else {
+            this.homepage = false;
+        }
     },
     methods: {
         disconnect(){

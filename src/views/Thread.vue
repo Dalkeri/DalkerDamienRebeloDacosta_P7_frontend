@@ -1,8 +1,13 @@
 <template>
+  <headerNav />
+  <!-- <displayThread /> -->
+
   <div class="Thread d-flex justify-content-center">
     <div class="card border-primary mb-4">
       ====================================
-      <div class="card-header">{{ thread.User.firstName + " " + thread.User.lastName}}</div>
+      <div class="card-header">
+        <router-link :to="{ name: 'User', params: { id: thread.User.id ? thread.User.id : 0 }}">{{ thread.User.firstName + " " + thread.User.lastName}}</router-link>
+        </div>
       <div  class="card-body">
         <div v-if="modifyThread">
           <addThread :thread="thread" @my-event="updateThreads" />
@@ -33,32 +38,59 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
 import addThread from '../components/addThread.vue'
-import Comment from './Comment.vue'
-import AddComment from './AddComment.vue'
+import Comment from '../components/Comment.vue'
+import AddComment from '../components/AddComment.vue'
 import { mapState, mapGetters } from "vuex"
-import Axios from 'axios'
+// import displayThread from '../components/displayThread.vue';
+import axios from 'axios'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'Thread',
-  props: { 
-    thread: Object
-  },
-  data: function() {
-    return { 
-      modifyThread: false,
-     };
-  },
-  created(){
-      // console.log("props", this.thread);
-  },
   components: {
     addThread,
     Comment,
     AddComment
+  },
+  data: function() {
+    return { 
+       thread: '',
+    };
+  },
+  async beforeCreate(){
+    this.route = useRoute();
+    console.log(this.route.params);
+    if(this.route.params){
+        await axios.get("http://localhost:3000/api/thread/"+this.route.params.id)
+                           .then(res => {
+                              console.log(".then", res.data);
+                              // this.datasFetched = true;
+                              // return res.data;
+                              this.thread = res.data;
+                              // this.$emit("myEvent");
+                            })
+                           .catch(error => console.log("trouble while fetching datas: ", error));
+      }
+
+
+    // //IF route.params.id ==  connectedUser.userId go to account route
+    // // console.log("userConnected created", this.userConnected);
+    // // console.log(this.route.params.id == this.userConnected.userId);    
+
+    //  let config = {
+    //       headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
+    //  }
+    // console.log(config);
+    // Axios.post("/user/getUserById", this.route.params, config)
+    //      .then( res => {
+    //         console.log(res);
+    //         this.user = res.data.user; 
+    //      });
   },
   computed: {
         ...mapState({
@@ -78,7 +110,7 @@ export default {
       deleteThread(){
         console.log("Delete thread ",this.thread.id);
  
-        Axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
+        axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);

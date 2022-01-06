@@ -1,10 +1,11 @@
 <template>
   <div class="Feed">
+    <messageHandler type="success" message="coucou" display="true" />
     <div class="threads" v-if="datasFetched">
       <section class="thread" v-for="thread in threads" :key="thread.id">
-          <Thread :thread="thread"  @my-event="getThreads"/>
+          <displayThread :thread="thread"  @my-event="getThreads"/>
       </section>
-      <!-- <Thread v-bind="threads"/> -->
+      <!-- <displayThread v-bind="threads"/> -->
     </div>
     <div class="loading" v-else>
       <h3>Loading ...</h3>
@@ -14,14 +15,16 @@
 </template>
 
 <script>
-import Thread from './Thread.vue'
+import displayThread from './displayThread.vue'
+import messageHandler from './messageHandler.vue'
 import axios from 'axios';
 
 
 export default {
   name: 'Feed',
   components: {
-    Thread
+    displayThread,
+    messageHandler,
   },
   props: {
     reloadThreads: Boolean
