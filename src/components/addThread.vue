@@ -1,12 +1,15 @@
 <template>
   <div class="addThread">
-    <form @submit.prevent="createThread">
+    <form @submit.prevent="handleThread">
         <label for="fname">Title:</label><br>
         <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle"><br>
         <label for="lname">Content:</label><br>
-        <input type="textarea" v-model="threadContent" id="threadContent"  name="threadContent"><br><br> 
+        <input type="textarea" v-model="threadContent" id="threadContent" name="threadContent"><br><br> 
         <label>File</label><br>
         <input type="file" id="uploadFile" @change="handleFileUpload( $event )"/><br>
+        <div v-if="this.threadImage">
+          <input type="checkbox" v-model="deletePic" id="deletePic" name="deletePic" />Supprimer l'image actuelle<br>
+        </div>
         <input type="submit" value="Poster">
     </form> 
   </div>
@@ -15,7 +18,7 @@
 <script>
 
 import Axios from 'axios'
-import { mapState, mapGetters } from "vuex"
+import { mapState } from "vuex"
 
 export default {
   name: 'addThread',
@@ -28,6 +31,8 @@ export default {
       datas: this.thread,
       threadTitle:"",
       threadContent:"",
+      threadImage:"",
+      deletePic:"",
       disable: true,
       file: ''
     };
@@ -36,21 +41,19 @@ export default {
         ...mapState({
             userConnected: ({userConnected}) => userConnected
             //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
-        }),
-        ...mapGetters([
-          'getRequestConfig'
-        ])
+        })
     },
   created(){
     if( this.datas ){
       this.threadTitle = this.datas.title,
-      this.threadContent = this.datas.content
+      this.threadContent = this.datas.content,
+      this.threadImage = this.datas.image
     }
   },
   methods: {
-      createThread(e){
+      handleThread(e){
         e.preventDefault();
-        console.log("createThread");
+        console.log("handleThread");
 
         let formData = new FormData();
 
@@ -58,6 +61,7 @@ export default {
         formData.append('content', this.threadContent);
         formData.append('userId', this.userConnected.id);
         formData.append('image', this.file);
+        formData.append('deletePic', this.deletePic);
        
        
        let threadInfos = {
@@ -77,23 +81,24 @@ export default {
         //new creation
         if( !this.datas ) {
           // Axios.post("/thread/create", threadInfos, config )
-          Axios.post("/thread/create", formData, this.$store.getters.getRequestConfig )
+          Axios.post("/thread/create", formData )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
-                this.$emit("myEvent"); //TODO change name
+                console.log("1 addThread emit updateThreadEvent to displayThread");
+                this.$emit("updateThreadEvent");
                 this.resetValues();
               });
         } else { //modification
           console.log("/thread/modify/" + this.datas.id);
           // Axios.put("/thread/modify/" + this.datas.id, threadInfos, config )
-          Axios.put("/thread/modify/" + this.datas.id, formData, this.$store.getters.getRequestConfig )
+          Axios.put("/thread/modify/" + this.datas.id, formData )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
                 if(res.status == 200){
-                  console.log("addThread emit myEvent");
-                  this.$emit("myEvent");
+                  console.log("2 addThread emit updateThreadEvent to displayThread");
+                  this.$emit("updateThreadEvent");
                   this.resetValues();
                 }
                 // this.resetValues();

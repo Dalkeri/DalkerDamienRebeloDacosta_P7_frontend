@@ -8,7 +8,7 @@
         </div>
       <div  class="card-body">
         <div v-if="modifyThread">
-          <addThread :thread="thread" @my-event="updateThreads" />
+          <addThread :thread="thread" @update-thread-event="updateThreads" />
         </div>
         <div v-else>
           <h4 class="card-title">{{ thread.title }}</h4>
@@ -20,18 +20,22 @@
 
         <!-- buttons if owner or admin -->
         <div v-if="thread.userId == userConnected.id || userConnected.admin">
-        <span><button type="button" v-on:click="modifyThread = !modifyThread">Modifier</button><button type="button" v-on:click="deleteThread">Supprimer</button></span>
+        <span>
+          <button type="button" v-on:click="modifyThread = !modifyThread" v-if="!modifyThread">Modifier</button>
+          <button type="button" v-on:click="modifyThread = !modifyThread" v-if="modifyThread">Annuler</button>
+          <button type="button" v-on:click="deleteThread">Supprimer</button>
+        </span>
         </div>
 
         <!-- comments -->
         <div v-if="thread.Comments">
           <div class="comments" v-for="comment in thread.Comments" :key="comment.id">
-            <Comment :comment="comment" :id="thread.id" />
+            <Comment :comment="comment" :id="thread.id" @handle-comments-event="handleComments"/>
           </div>
         </div>
 
         <!-- add comment -->
-        <AddComment :threadId="thread.id" />
+        <AddComment :threadId="thread.id" @handle-comments-event="handleComments" />
       
       </div>
     </div>
@@ -56,7 +60,8 @@ export default {
   data: function() {
     return { 
       modifyThread: false,
-      // thread: '',
+      threadUserId: '',
+      modifyComments: false,
      };
   },
   // computed: {
@@ -96,24 +101,29 @@ export default {
         ])
     },
   methods: {
-      updateThreads(){
-        console.log("Thread emit myEvent");
-        this.modifyThread = false;
-        this.$emit("myEvent");
-      },
-      deleteThread(){
-        console.log("Delete thread ",this.thread.id);
+    handleComments(commentContent) {
+      console.log("displayThread emit  handleCommentsEvent to Feed", commentContent);
+      this.modifyComments = true;
+      this.$emit("handleCommentsEvent", commentContent ); 
+    },
+    updateThreads(){
+      console.log("1 displayThread emit updateThreadEvent to Feed");
+      this.modifyThread = false;
+      this.$emit("updateThreadEvent");
+    },
+    deleteThread(){
+      console.log("Delete thread ",this.thread.id);
  
-        axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
-                //  .then( response => response.json() )
-              .then( res => {
-                console.log("res", res);
-                if(res.status == 200){
-                  console.log("addThread emit myEvent");
-                  this.$emit("myEvent");
-                }
-                // this.resetValues();
-              });
+      axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
+              //  .then( response => response.json() )
+            .then( res => {
+              console.log("res", res);
+              if(res.status == 200){
+                console.log("2 displayThread emit updateThreadEvent to Feed");
+                this.$emit("updateThreadEvent");
+              }
+              // this.resetValues();
+            });
       }
   }
 }

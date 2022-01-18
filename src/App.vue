@@ -32,16 +32,20 @@ export default {
   created(){
     console.log("created app");
     if( localStorage.getItem('groupomaniaToken') ){
-      let config = {
-          headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
-        }
-        Axios.post("/user/autoLogin", {auto: true}, config )
+      Axios.defaults.headers.common.Authorization = "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'));
+      // let config = {
+      //     headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
+      //   }
+        Axios.post("/user/autoLogin", {auto: true} )
                 //  .then( response => response.json() )
               .then( res => {
                 // console.log("res", res.data);
                 this.$store.dispatch('userInfo', res.data.user );
                 localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                 this.$store.dispatch('requestConfig',localStorage.getItem('groupomaniaToken'));
+                if( this.$route.fullPath == '/'){
+                  this.$router.push('/home');
+                }
               })
               .catch(err => console.log(err.response));
 

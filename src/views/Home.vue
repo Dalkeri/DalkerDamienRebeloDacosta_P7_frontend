@@ -4,7 +4,7 @@
     <h1>Welcome to this social website</h1>
     <h2>This is your feed, you'll see every post in there</h2>
     <hr/>
-    <addThread @my-event="updateThreads" />
+    <addThread @update-thread-event="updateThreads" />
     <hr/>
     <Feed  :reloadThreads="reloadThreads" @my-event="updateThreads" />
   </div>

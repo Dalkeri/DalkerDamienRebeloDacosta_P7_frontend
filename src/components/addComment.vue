@@ -12,7 +12,8 @@ import { mapState, mapGetters } from "vuex"
 export default {
   name: 'AddComment',
   props: {
-    comment: Object,
+    // comment: Object,
+    comment: String,
     commentId: Number,
     threadId: Number,
   },
@@ -38,10 +39,6 @@ export default {
     // }
   },
   methods: {
-    updateThread(){
-        console.log("addComment emit myEvent");
-        this.$emit("myEvent");
-    },
     createComment(e){
         e.preventDefault();
         console.log("ajout de commentaire", this.commentContent);
@@ -62,8 +59,9 @@ export default {
                     .then( res => {
                         console.log("res", res);
                         if(res.status == 200){
-                          //envoyer le contenu en event au parent thread puis au parent feed pour add au tableau
-                        // this.updateThread();
+                          console.log("addComment create emit updateCommentsEvent to comment or displayThread", this.commentContent);
+                          this.resetValues();
+                          this.$emit("handleCommentsEvent", res.data );
                         }
                     }); 
             } else {    //ternaire au lieu de if else ou if normal
@@ -72,14 +70,22 @@ export default {
                 .then( res => {
                     console.log("res", res);
                     if(res.status == 200){
-                    console.log("comment modified successfully ");
+                      console.log("comment modified successfully ", commentInfos);
+                      console.log("addComment modify emit updateCommentsEvent to comment or displayThread", this.commentContent);
+                      this.resetValues();
+                      this.$emit("handleCommentsEvent", res.data );
                     }
                 });
             }
         } else {
           console.log("content empty");
       }
-    }
+    },
+    resetValues(){
+        console.log("reset values");
+        this.commentContent = "";
+
+      },
   }
 }
 </script>

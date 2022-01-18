@@ -84,7 +84,7 @@ export default {
   },
   mounted(){
     this.route = useRoute();
-    console.log("MOUNTED", this.$route);
+    console.log("MOUNTED", this.$route.path);
       
     if(this.$route.path == "/account"){
         // console.log("IF");
@@ -94,7 +94,7 @@ export default {
         this.userToDisplay = this.userConnected;
     } else {
 
-        // console.log("MOUNTED 2", this.userConnected);
+        console.log("MOUNTED 2", this.userConnected);
         
         this.userId = this.route.params.id;
 
@@ -111,7 +111,7 @@ export default {
     }     
   },
   updated(){
-    console.log("updated ", this.userDeleted);
+    // console.log("updated ", this.userDeleted);
 
 
     // if(this.userConnected.id == this.route.params.id){
@@ -121,18 +121,21 @@ export default {
     // if(this.$route.path == "/account"){
     //     this.page = "account";
     // }
-    if(this.$route.path == "/account"){
-        console.log("updated account");
-        // console.log("updated 3", this.userConnected);
 
-        // this.page = "account";
-        this.userToDisplay = this.userConnected;
+    //////////////////////////
+    // if(this.$route.path == "/account"){
+        
+    //     this.userToDisplay = this.userConnected;
+    // }
+    /////////////////
+    if(this.userToDisplay == '' && this.$route.fullPath == '/account'){
+      this.userToDisplay = this.userConnected;
     }
-
     if(this.userConnected.id == this.route.params.id && !this.userDeleted){
-            console.log("coucou");
-            this.$router.push("/account");
+      // console.log("coucou");
+      this.$router.push("/account");
     }
+
 
     // if(this.userDeleted){
     //   this.$router.go('home');
@@ -180,7 +183,7 @@ export default {
     sendBioForm(){
       let bio = {bio: this.newBio};
       console.log("sendBioForm", bio);
-      Axios.post("/user/modifyBio", bio, this.$store.getters.getRequestConfig)
+      Axios.post("/user/modifyBio/", bio, this.$store.getters.getRequestConfig)
            .then( res => {
               console.log("modifyBio ", res)
               if(res.status == 200){

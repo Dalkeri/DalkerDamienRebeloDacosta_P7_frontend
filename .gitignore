@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 truc.js
 divers
+src/components/displayThread_copy.vue

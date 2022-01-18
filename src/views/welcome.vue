@@ -88,6 +88,9 @@ export default {
         connect(datas){
             this.$store.dispatch('userInfo', datas.user );
             localStorage.setItem("groupomaniaToken", JSON.stringify(datas.token));
+            Axios.defaults.headers.common.Authorization = 'Bearer ' + datas.token;
+            console.log("connect", datas.token);
+            console.log(Axios.defaults.headers.common.Authorization);
             this.$router.push('home');
         },
         signIn(e){
@@ -110,7 +113,6 @@ export default {
                         // localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                         // this.$router.push('home');
                         this.connect(res.data);
-                        console.log("113", res.data.token);
                         this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
                  })
                  .catch(error => console.log({error}));

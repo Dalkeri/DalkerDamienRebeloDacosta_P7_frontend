@@ -7,11 +7,15 @@
         <p>{{ comment.content }}</p>
       </div>
       <div v-else>
-        <AddComment :comment="comment.content" :commentId="comment.id"/>
+        <AddComment :comment="comment.content" :commentId="comment.id" @handle-comments-event="handleComments" />
       </div>
     </div>
     <div v-if="comment.userId == userConnected.id || userConnected.admin">
-      <span><button type="button" v-on:click="modifyComment = !modifyComment">Modifier</button><button type="button" v-on:click="deleteComment">Supprimer</button></span>
+      <span>
+        <button type="button" v-on:click="modifyComment = !modifyComment" v-if="!modifyComment">Modifier</button>
+        <button type="button" v-on:click="modifyComment = !modifyComment" v-if="modifyComment">Annuler</button>
+        <button type="button" v-on:click="deleteComment">Supprimer</button>
+      </span>
     </div>
   </div>
 </template>
@@ -51,17 +55,25 @@ export default {
         ])
     },
   methods: {
-      deleteComment(){
-        console.log("Delete comment ",this.comment.id);
+    handleComments(commentContent) {
+      console.log("comment emit  handleCommentsEvent to comment or displayThread", commentContent);
+      
+      this.modifyComment = false;
+      this.$emit("handleCommentsEvent", commentContent ); 
 
-        Axios.delete("/comment/" + this.comment.id, this.$store.getters.getRequestConfig )
-                //  .then( response => response.json() )
-              .then( res => {
-                console.log("res", res);
-                if(res.status == 200){
-                  console.log("comment deleted ");
-                }
-              });
+    },
+    deleteComment(){
+      console.log("Delete comment ",this.comment.id);
+
+      Axios.delete("/comment/" + this.comment.id, this.$store.getters.getRequestConfig )
+              //  .then( response => response.json() )
+            .then( res => {
+              console.log("res", res);
+              if(res.status == 200){
+                console.log("comment deleted ");
+                this.$emit("handleCommentsEvent", {id: this.comment.id, threadId: this.comment.threadId, action: "delete" });
+              }
+            });
       }
   }
 }

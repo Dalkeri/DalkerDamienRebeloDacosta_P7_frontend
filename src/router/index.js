@@ -3,7 +3,7 @@ import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
 import Account from '../views/Account.vue'
 import User from '../views/User.vue'
-import Thread from '../views/Thread.vue'
+// import Thread from '../views/Thread.vue'
 
 const routes = [
   {
@@ -82,33 +82,37 @@ const routes = [
           content: 'A user page.'
         }
       ]
+    },
+    beforeEnter: (to, from, next) => {
+      function isValid(param){
+       return !isNaN(param);
+      }
+
+      if(!isValid(to.params.id)) {
+        console.log("here");
+        next({name: 'Home'});
+      } else {
+        next();
+      }
     }
-  },
-  {
-    path: '/thread/:id',
-    name: 'Thread',
-    component: Thread,
-    meta: {
-      // transition: 'slide-right',
-      title: 'Thread page',
-      metaTags: [
-        {
-          name: 'Thread page',
-          content: 'A thread page.'
-        },
-        {
-          property: 'og:description',
-          content: 'A thread page.'
-        }
-      ]
-    }
-  },
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   //base: process.env.BASE_URL,
   routes
+})
+
+//if we're not connected, redirect to login page
+router.beforeEach((to, from, next) => {
+  const isConnected = localStorage.getItem('groupomaniaToken');
+  console.log(isConnected);
+  if( !isConnected && to.name !== 'Welcome'){
+    next({ name: 'Welcome' });
+  } else{
+    next();
+  }
 })
 
 export default router
