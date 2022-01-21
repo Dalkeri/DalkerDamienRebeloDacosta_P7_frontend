@@ -98,11 +98,11 @@ export default {
         
         this.userId = this.route.params.id;
 
-        let config = {
-            headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem   ('groupomaniaToken'))}
-        }
+        // let config = {
+        //     headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem   ('groupomaniaToken'))}
+        // }
         // console.log(config);
-        Axios.post("/user/getUserById", this.route.params, config)
+        Axios.post("/user/getUserById", this.route.params)
             .then( res => {
                 console.log("/user/getUserById", res);
                 this.userToDisplay = res.data.user; 
@@ -111,23 +111,9 @@ export default {
     }     
   },
   updated(){
-    // console.log("updated ", this.userDeleted);
+   
+    //TODO: put this in created ? or mounted ? or beforeRoute ?
 
-
-    // if(this.userConnected.id == this.route.params.id){
-    //     console.log("coucou");
-    //     this.$router.push("/account");
-    // }
-    // if(this.$route.path == "/account"){
-    //     this.page = "account";
-    // }
-
-    //////////////////////////
-    // if(this.$route.path == "/account"){
-        
-    //     this.userToDisplay = this.userConnected;
-    // }
-    /////////////////
     if(this.userToDisplay == '' && this.$route.fullPath == '/account'){
       this.userToDisplay = this.userConnected;
     }
@@ -135,17 +121,11 @@ export default {
       // console.log("coucou");
       this.$router.push("/account");
     }
-
-
-    // if(this.userDeleted){
-    //   this.$router.go('home');
-    //   console.log(this.$router);
-    // }
   },
   methods: {
     displayBioForm(){
       console.log(this.userConnected)
-      this.newBio = this.userConnected.bio;
+      this.newBio = this.userToDisplay.bio;
       this.bioForm = !this.bioForm;
     },
     displayPasswordForm(){
@@ -183,16 +163,17 @@ export default {
     sendBioForm(){
       let bio = {bio: this.newBio};
       console.log("sendBioForm", bio);
-      Axios.post("/user/modifyBio/", bio, this.$store.getters.getRequestConfig)
+      Axios.post("/user/" + this.userToDisplay.id +"/modifyBio" , bio)
            .then( res => {
               console.log("modifyBio ", res)
               if(res.status == 200){
                   //change bio in store
-                  //change 2 lines after that because it's shitty
+                  //change 2 lines after that
                   let updateUser = this.userConnected;
                   updateUser.profilPic = this.newprofilPic;
                   // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
+                  this.userToDisplay.bio = this.newBio;
                   this.bioForm = !this.bioForm;
               }
            })
