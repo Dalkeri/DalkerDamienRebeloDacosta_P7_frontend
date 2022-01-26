@@ -5,12 +5,12 @@
                 <img :src="this.userConnected.profilPic" alt="Profil picture">
                 <!-- <router-link to="/account">Mon compte</router-link> -->
                 <router-link to="/account">{{this.userConnected.firstName}} {{this.userConnected.lastName}}</router-link>
-                <button type="button" class="btn btn-primary" v-on:click="disconnect">se déconnecter</button>
             </div>
         </div>
         <div v-else>
             <router-link to="/home">Retour à l'accueil</router-link>
         </div>
+        <hr />
     </div>
 </template>
 
@@ -62,12 +62,12 @@ export default {
         }
     },
     methods: {
-        disconnect(){
-            this.$store.dispatch('userInfo', '');
-            this.$store.dispatch('requestConfig', '');
-            localStorage.removeItem("groupomaniaToken");
-            this.$router.push('/');
-        },
+        // disconnect(){
+        //     this.$store.dispatch('userInfo', '');
+        //     this.$store.dispatch('requestConfig', '');
+        //     localStorage.removeItem("groupomaniaToken");
+        //     this.$router.push('/');
+        // },
         // routeChanged(newRoute){
         //     console.log("my account");
         //     this.$store.dispatch('actualRoute', newRoute);
@@ -96,5 +96,9 @@ export default {
         margin-right: 10px;
         // border-radius: 50%;
         overflow: hidden;
+    }
+
+    hr{
+        color: white;
     }
 </style>

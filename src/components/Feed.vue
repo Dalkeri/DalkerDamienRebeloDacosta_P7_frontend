@@ -50,7 +50,7 @@ export default {
   methods: {
     test(text){
       console.log("function test");
-      createToast(text,{type: 'success', timeout:1750, showIcon: true} );
+      createToast(text,{type: 'success', timeout:2000, showIcon: true} );
     },
     handleComments(commentContent) {
       console.log("Feed received event updateCommentsEvent", commentContent);

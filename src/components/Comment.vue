@@ -1,6 +1,6 @@
 <template>
   <div class="Comment">
-    <h4>----------</h4>
+    <hr />
     <div>
       <p>{{ comment.User.firstName + " " + comment.User.lastName}}</p>
       <div v-if="!modifyComment">
@@ -17,6 +17,7 @@
         <button type="button" v-on:click="deleteComment">Supprimer</button>
       </span>
     </div>
+    <hr />
   </div>
 </template>
 

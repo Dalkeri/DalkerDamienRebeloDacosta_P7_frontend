@@ -159,10 +159,11 @@ export default {
   methods: {
     disconnect(){
       console.log("disconnect ?");
-      // this.$store.dispatch('userInfo', '');
       // this.$store.dispatch('requestConfig', '');
       localStorage.removeItem("groupomaniaToken");
-      this.$router.push({ name: 'Welcome' });
+      this.$store.dispatch('userInfo', '');
+      // this.$router.push({ path: '/' });
+      this.$router.go('Welcome');
 
     },
     displayBioForm(){
@@ -296,7 +297,7 @@ export default {
 
 img{
   width: 50%;
-  margin: auto;
+  margin-bottom: 20px;
 }
 
 // .container {
@@ -332,7 +333,7 @@ input{
 }
 
 label{
-  width: 50%;
+  width: 100%;
 }
 
 

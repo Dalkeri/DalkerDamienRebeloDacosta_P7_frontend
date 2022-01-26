@@ -1,11 +1,11 @@
 <template>
   <div class="addThread">
     <form @submit.prevent="handleThread">
-        <label for="fname" class="col-sm-2 col-form-label">Title:</label>
+        <label for="fname" class="col-sm-2 col-form-label">Titre:</label>
         <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control" >
-        <label for="lname" class="col-sm-2 col-form-label">Content:</label>
+        <label for="lname" class="col-sm-2 col-form-label">Contenu:</label>
         <input type="textarea" v-model="threadContent" id="threadContent" name="threadContent" class="form-control">
-        <label class="col-sm-2 col-form-label">File</label>
+        <label class="col-sm-2 col-form-label">Image:</label>
         <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/>
         <div v-if="this.threadImage">
           <input type="checkbox" class="form-check-input" v-model="deletePic" id="deletePic" name="deletePic">Supprimer l'image actuelle<br>
