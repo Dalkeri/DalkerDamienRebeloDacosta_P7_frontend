@@ -55,7 +55,7 @@ export default {
 
             //if we didn't get props it's a new comment
             if( !this.comment ){
-                Axios.post("/comment/create/",  commentInfos, this.$store.getters.getRequestConfig )
+                Axios.post("/comment/create/",  commentInfos )
                     .then( res => {
                         console.log("res", res);
                         if(res.status == 200){
@@ -65,7 +65,7 @@ export default {
                         }
                     }); 
             } else {    //ternaire au lieu de if else ou if normal
-                Axios.put("/comment/modify/" + this.commentId, commentInfos, this.$store.getters.getRequestConfig )
+                Axios.put("/comment/modify/" + this.commentId, commentInfos )
                 //  .then( response => response.json() )
                 .then( res => {
                     console.log("res", res);

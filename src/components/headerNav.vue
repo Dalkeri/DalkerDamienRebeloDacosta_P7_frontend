@@ -2,9 +2,10 @@
     <div class="headerNav">
         <div v-if="homepage">
             <div>
-                <div>img</div>
-                <router-link to="/account">Mon compte</router-link>
-                <button type="button" v-on:click="disconnect">se déconnecter</button>
+                <img :src="this.userConnected.profilPic" alt="Profil picture">
+                <!-- <router-link to="/account">Mon compte</router-link> -->
+                <router-link to="/account">{{this.userConnected.firstName}} {{this.userConnected.lastName}}</router-link>
+                <button type="button" class="btn btn-primary" v-on:click="disconnect">se déconnecter</button>
             </div>
         </div>
         <div v-else>
@@ -24,17 +25,6 @@ export default {
     name: 'headerNav',
     data() {
         return {
-            SULName:"",
-            SUFName:"",
-            SUEmail:"",
-            SUPassword:"",
-            SUPassword2:"",
-
-            errorMessage:"",
-
-            SIEmail:"",
-            SIPassword:"",
-
             homepage: false,
         }
     },
@@ -78,34 +68,33 @@ export default {
             localStorage.removeItem("groupomaniaToken");
             this.$router.push('/');
         },
-        routeChanged(newRoute){
-            console.log("my account");
-            this.$store.dispatch('actualRoute', newRoute);
+        // routeChanged(newRoute){
+        //     console.log("my account");
+        //     this.$store.dispatch('actualRoute', newRoute);
+
+        // },
+        myAccount(){
+            this.$router.push('/account');
 
         }
     },
 }
 </script>
 
-<style scoped>
-    .btn{
-        box-shadow: 5px 5px 10px rgb(17 18 18 / 35%), -5px -5px 10px rgb(240 141 141 / 40%);
-        /* box-shadow: 5px 5px 10px rgb(209 81 90 / 100%), -5px -5px 10px rgb(240 141 141 / 40%); */
-        background-color: #e1e5e6 !important;
-        color: #091f43 !important;
-    }
-    .btn.active{
-        /* box-shadow: inset 0 3px 5px rgb(17 18 18 /35%); */
-        box-shadow: inset 0 3px 5px rgb(17 18 18 /65%);
+<style lang="scss">
+    .headerNav{
+        margin-top: 20px;
     }
 
-    .true{
-        /* background-color: #d1515a !important; */
-        /* outline: 0; a */
-        /* box-shadow: 0 0 0 0.25rem rgba(43, 58, 77, 0.51); */
-        /* box-shadow: 0 0 0 0.25rem rgba(55, 141, 252, 0.25); */
-        
-        /* box-shadow: 0 0 0 0.25rem rgba(17, 18, 18, 0.35); a*/
-        /* border-color: #d1515a !important; a*/
+    button{
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    img{
+        width:100px;
+        // height:50px;
+        margin-right: 10px;
+        // border-radius: 50%;
+        overflow: hidden;
     }
 </style>

@@ -1,16 +1,16 @@
 <template>
   <div class="addThread">
     <form @submit.prevent="handleThread">
-        <label for="fname">Title:</label><br>
-        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle"><br>
-        <label for="lname">Content:</label><br>
-        <input type="textarea" v-model="threadContent" id="threadContent" name="threadContent"><br><br> 
-        <label>File</label><br>
-        <input type="file" id="uploadFile" @change="handleFileUpload( $event )"/><br>
+        <label for="fname" class="col-sm-2 col-form-label">Title:</label>
+        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control" >
+        <label for="lname" class="col-sm-2 col-form-label">Content:</label>
+        <input type="textarea" v-model="threadContent" id="threadContent" name="threadContent" class="form-control">
+        <label class="col-sm-2 col-form-label">File</label>
+        <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/>
         <div v-if="this.threadImage">
-          <input type="checkbox" v-model="deletePic" id="deletePic" name="deletePic" />Supprimer l'image actuelle<br>
+          <input type="checkbox" class="form-check-input" v-model="deletePic" id="deletePic" name="deletePic">Supprimer l'image actuelle<br>
         </div>
-        <input type="submit" value="Poster">
+        <input type="submit" value="Poster" class="btn btn-primary">
     </form> 
   </div>
 </template>
@@ -19,6 +19,7 @@
 
 import Axios from 'axios'
 import { mapState } from "vuex"
+
 
 export default {
   name: 'addThread',
@@ -45,6 +46,7 @@ export default {
     },
   created(){
     if( this.datas ){
+      console.log("CREATED de addThread avec this.datas");
       this.threadTitle = this.datas.title,
       this.threadContent = this.datas.content,
       this.threadImage = this.datas.image
@@ -146,3 +148,25 @@ export default {
 }
 
 </script>
+
+<style lang="scss">
+    form{
+        display: flex;
+        align-items: center;
+        margin-right: auto;
+        margin-left: auto;
+        flex-direction: column;
+        width: 88% !important;
+
+        color: white;
+    }
+
+    input{
+        margin-bottom: 20px;
+    }
+
+    label{
+        width: 50%;
+    }
+
+</style>

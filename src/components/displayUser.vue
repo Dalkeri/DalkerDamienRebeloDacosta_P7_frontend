@@ -1,47 +1,79 @@
 <template>
-  <img :src="userToDisplay.profilPic" alt="Profil picture">
-  <br>
-  <h3>{{ userToDisplay.firstName }} {{ userToDisplay.lastName }}</h3>
-  <br>
-  <strong>{{ userToDisplay.bio }}</strong>
-  <div class="container" v-if="userConnected.admin || pageAccount">
-    <div v-if="!showInputProfilPic">
-        <button type="button" v-on:click="showInputProfilPic = true">Changer de photo</button>
+  <div class="displayUser">
+    <img :src="userToDisplay.profilPic" alt="Profil picture">
+    <h3>{{ userToDisplay.firstName }} {{ userToDisplay.lastName }}</h3>
+    <div>Biographie :</div>
+    <div class="biography">{{ userToDisplay.bio }}</div>
+    <div class="buttons" v-if="userConnected.admin || pageAccount">
+
+      <div v-if="!showInputProfilPic">
+          <button type="button"  class="btn btn-primary"  v-on:click="showInputProfilPic = true">Changer de photo</button>
+      </div>
+      <div v-if="showInputProfilPic">
+          <hr />
+          <form @submit.prevent="sendProfilPicForm">
+            <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/><br>
+            <input type="submit" class="btn btn-primary" v-on:click="sendProfilPicForm" value="Enregistrer">
+            <button type="button" class="btn btn-primary" v-on:click="showInputProfilPic = !showInputProfilPic">Annuler</button>
+          </form>
+          
+          <hr />
+      </div>
+
+      <div v-if="!bioForm">
+          <button type="button" class="btn btn-primary" v-on:click="displayBioForm">Modifier la biographie</button>
+      </div>
+      <div v-else>
+          <hr />
+          <form @submit.prevent="sendBioForm">
+            <textarea type="text" class="form-control" v-model="newBio" id="newBio" name="newBio"></textarea><br>
+            <input type="submit" class="btn btn-primary" value="Enregistrer">
+            <button type="button" class="btn btn-primary" v-on:click="bioForm = !bioForm">Annuler</button>
+          </form>
+          
+          <hr />
+      </div>
+
+      <div v-if="!passwordForm">
+          <button type="button" v-on:click="passwordForm = !passwordForm"  class="btn btn-primary" >Changer de mot de passe</button> 
+      </div>
+      <div v-else>
+        <hr />
+        <form @submit.prevent="sendPasswordForm">
+          <label for="password" class="col-sm-2 col-form-label">Nouveau mot de passe:</label>
+          <input type="text"  class="form-control" id="newPassword" name="newPassword" v-model="newPassword" >
+          <input type="submit" class="btn btn-primary" value="Enregistrer">
+          <button type="button" class="btn btn-primary" v-on:click="passwordForm = !passwordForm">Annuler</button>          
+        </form>
+        <hr />
+      </div>
+
+      <button type="button" class="btn btn-primary" v-on:click="disconnect">Se déconnecter</button>
+
+      <div v-if="!checkBeforeDelete">
+          <button type="button" class="btn btn-primary"  v-on:click="checkBeforeDelete = !checkBeforeDelete">Supprimer le compte</button>
+      </div>
+      <div v-else>
+        <hr />
+        <form @submit.prevent="deleteProfil">
+          <label for="deleteProfil" class="col-sm-2 col-form-label">Voulez-vous supprimer le compte ?</label>
+          <input type="submit" class="btn btn-primary" value="Oui">
+          <button type="button" class="btn btn-primary" v-on:click="checkBeforeDelete = !checkBeforeDelete">Annuler</button>          
+        </form>
+        <hr />
+      </div>
+      <!-- <button type="button" class="btn btn-primary"  v-on:click="deleteProfil()">Supprimer le compte</button> -->
     </div>
-    <div v-if="showInputProfilPic">
-        <input type="file" id="uploadFile" @change="handleFileUpload( $event )"/><br>
-        <button type="button" v-on:click="sendProfilPicForm">Enregistrer</button>
-        <button type="button" v-on:click="showInputProfilPic = !showInputProfilPic">Annuler</button>
-    </div>
-    <div v-if="!bioForm">
-        <button type="button" v-on:click="displayBioForm">Modifier la biographie</button>
-    </div>
-    <div v-else>
-        <textarea type="text" v-model="newBio" id="newBio" name="newBio"></textarea><br>
-        <button type="button" v-on:click="sendBioForm">Enregistrer</button>
-        <button type="button" v-on:click="bioForm = !bioForm">Annuler</button>
-    </div>
-    <div v-if="!passwordForm">
-        <button type="button" v-on:click="passwordForm = !passwordForm">Changer de mot de passe</button> 
-    </div>
-    <div v-else>
-        <!-- pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" -->
-        <label for="password">Ancien mot de passe:</label><br>
-        <input type="text" id="oldPassword" name="oldPassword" v-model="oldPassword" ><br>
-        <label for="password">Nouveau mot de passe:</label><br>
-        <input type="text" id="newPassword" name="newPassword" v-model="newPassword" ><br>
-        <button type="button" v-on:click="sendPasswordForm">Enregistrer</button>
-        <button type="button" v-on:click="passwordForm = !passwordForm">Annuler</button>
-    </div>
-    <button type="button" v-on:click="deleteProfil()">Supprimer le compte</button>
   </div>
+  
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
 import { useRoute } from 'vue-router';
 import Axios from 'axios';
-
+import { createToast } from 'mosha-vue-toastify';
+import 'mosha-vue-toastify/dist/style.css';
 
 export default {
   name: 'displayUser',
@@ -61,6 +93,8 @@ export default {
 
       threadHistory: '',
       commentHistory:  '',
+
+      checkBeforeDelete: false,
 
       route: '',
 
@@ -123,6 +157,14 @@ export default {
     }
   },
   methods: {
+    disconnect(){
+      console.log("disconnect ?");
+      // this.$store.dispatch('userInfo', '');
+      // this.$store.dispatch('requestConfig', '');
+      localStorage.removeItem("groupomaniaToken");
+      this.$router.push({ name: 'Welcome' });
+
+    },
     displayBioForm(){
       console.log(this.userConnected)
       this.newBio = this.userToDisplay.bio;
@@ -136,7 +178,7 @@ export default {
       console.log(this.file);
     },
     sendProfilPicForm(){
-      let bio = {bio: this.newProfilPic};
+      // let bio = {bio: this.newProfilPic};
       
       let formData = new FormData();
       formData.append('image', this.file);
@@ -144,18 +186,20 @@ export default {
       // let userInfos = {
       //     profilpic: this.file
       //   };
-      console.log("sendProfilPicForm", bio);
-      Axios.post("/user/modifyProfilPic", formData, this.$store.getters.getRequestConfig)
+      // console.log("sendProfilPicForm", bio);
+      Axios.post("/user/modifyProfilPic", formData)
            .then( res => {
               console.log("modifyProfilPic ", res)
               if(res.status == 200){
                   //change bio in store
                   let updateUser = this.userConnected;
-                  updateUser.profilPic = res.data.newProfilPic;
+                  this.userToDisplay.profilPic = res.data.newProfilPic;
                   // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
                   this.resetValues();
                   this.showInputProfilPic = false;
+              } else if(res.status == 500){
+                createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
            .catch(error => console.log(error));
@@ -170,26 +214,36 @@ export default {
                   //change bio in store
                   //change 2 lines after that
                   let updateUser = this.userConnected;
-                  updateUser.profilPic = this.newprofilPic;
+                  // updateUser.profilPic = this.newprofilPic;
                   // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
                   this.userToDisplay.bio = this.newBio;
                   this.bioForm = !this.bioForm;
+              } else if(res.status == 500){
+                createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
            .catch(error => console.log(error));
     },
     sendPasswordForm(){
-      let passwords = {oldPassword: this.oldPassword, newPassword: this.newPassword};
+      // let passwords = {oldPassword: this.oldPassword, newPassword: this.newPassword};
 
-      Axios.post("/user/modifyPassword", passwords, this.$store.getters.getRequestConfig)
+      Axios.post("/user/modifyPassword", {newPassword: this.newPassword})
            .then( res => {
               console.log("modifyBio ", res)
-              if(res.status == 200){
+              // if(res.status == 200){
                 this.bioForm = !this.passwordForm;
-              }
+                createToast(res.data.message,{type: 'success', timeout:2000, showIcon: true} );
+              // } else if(res.status == 500){
+              //   console.log("ok, erreur 500");
+              //   createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              // }
            })
-           .catch(error => console.log(error));
+           .catch(error => {
+             console.log(error.response.data)
+              createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+
+             });
            
     },
     resetValues(){
@@ -231,18 +285,54 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.displayUser{
+  color: white;
+}
+
+.biography{
+  margin-bottom: 20px;
+}
+
 img{
-  width: 20%;
+  width: 50%;
   margin: auto;
 }
 
-.container {
-  width: 900px !important;
-}
+// .container {
+//   width: 900px !important;
+// }
 
 button {
-  width: 150px;
-  margin: auto;
+  width: 200px;
+  // margin: auto;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form{
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  margin-left: auto;
+  flex-direction: column;
+  width: 88% !important;
+
+}
+
+input{
+  width: 80%;
+}
+
+label{
+  width: 50%;
 }
 
 

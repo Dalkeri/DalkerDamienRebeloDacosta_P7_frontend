@@ -1,7 +1,6 @@
 <template>
   <div class="Thread d-flex justify-content-center">
-    <div class="card border-primary mb-4">
-      ====================================
+    <div class="card border-secondary mb-4">
       <div class="card-header">
         <!-- {{ thread.User.firstName + " " + thread.User.lastName}} -->
         <router-link :to="{ name: 'User', params: { id: thread.User.id }}">{{ thread.User.firstName + " " + thread.User.lastName}}</router-link>
@@ -131,12 +130,13 @@ export default {
 
 <style scoped>
   .card {
-    /* box-shadow: 5px 5px 10px rgba(55, 94, 148, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.4); */
-    box-shadow: 5px 5px 10px rgba(43, 58, 77, 0.51), -5px -5px 10px rgba(255, 255, 255, 0.4);
-    /* box-shadow: 5px 5px 10px rgba(209, 81, 90, 1), -5px -5px 10px rgba(255, 255, 255, 0.4); */
-    
-    width: 80% !important;
-    background-color: #e1e5e6 !important;
-    color: #091f43 !important;
+    width: 88% !important;
+    /* background-color: #e1e5e6 !important;
+    color: #091f43 !important; */
+  }
+
+  img {
+    width: 75%;
+    margin-bottom: 50px;
   }
 </style>

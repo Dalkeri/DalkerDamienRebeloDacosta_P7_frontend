@@ -1,5 +1,8 @@
 <template>
   <div class="Feed">
+    <button type="button" v-on:click="test('coucou')">Click Me!</button>
+
+
     <!-- <messageHandler type="success" message="coucou" display="true" /> -->
     <div class="threads" v-if="datasFetched">
       <section class="thread" v-for="thread in threads" :key="thread.id">
@@ -18,6 +21,9 @@
 import displayThread from './displayThread.vue'
 // import messageHandler from './messageHandler.vue'
 import axios from 'axios';
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
+
 
 
 export default {
@@ -42,6 +48,10 @@ export default {
     }
   },
   methods: {
+    test(text){
+      console.log("function test");
+      createToast(text,{type: 'success', timeout:1750, showIcon: true} );
+    },
     handleComments(commentContent) {
       console.log("Feed received event updateCommentsEvent", commentContent);
       // console.log("this.threads", this.threads);
