@@ -137,9 +137,15 @@ export default {
         // console.log(config);
         Axios.post("/user/getUserById", this.route.params)
             .then( res => {
+              if(res.status == 200){
                 console.log("/user/getUserById", res);
-                this.userToDisplay = res.data.user; 
-        });
+                this.userToDisplay = res.data.user;
+              }
+            })
+            .catch(error => {
+                console.log(error);
+                this.$router.push('/home');
+            });
     
     }     
   },

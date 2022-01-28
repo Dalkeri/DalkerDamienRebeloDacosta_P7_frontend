@@ -95,6 +95,11 @@ const routes = [
         next();
       }
     }
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'notFound',
+    redirect: '/home'
   }
 ]
 

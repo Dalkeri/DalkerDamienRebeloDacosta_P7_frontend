@@ -47,16 +47,6 @@ export default {
         signUp(e){ //ajouter connexion auto ou message pour indiquer la création
             e.preventDefault();
 
-            // let mailFormat = `^\\w+([\\.-]?\\w+)*@_\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$`;
-            // console.log(mailFormat);
-            // console.log(this.SUEmail);
-            // console.log(this.SUEmail.match(mailFormat));
-            // if( !this.SUEmail.match(mailFormat)){
-            //     createToast("Format d'email incorrect.",{type: 'danger', timeout:2000, showIcon: true} );
-            //     return;
-            // }
-
-
             if(this.SUPassword !== this.SUPassword2){
                 createToast("Les deux mots de passes doivent être identiques.",{type: 'danger', timeout:2000, showIcon: true} );
                 return;

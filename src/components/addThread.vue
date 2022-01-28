@@ -94,7 +94,7 @@ export default {
         } else { //modification
           console.log("/thread/modify/" + this.datas.id);
           // Axios.put("/thread/modify/" + this.datas.id, threadInfos, config )
-          Axios.put("/thread/modify/" + this.datas.id, formData )
+          Axios.put("/thread/" + this.datas.id +"/modify/", formData )
                 //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);

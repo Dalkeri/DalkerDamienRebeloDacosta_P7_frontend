@@ -65,13 +65,13 @@ export default {
                         }
                     }); 
             } else {    //ternaire au lieu de if else ou if normal
-                Axios.put("/comment/modify/" + this.commentId, commentInfos )
+                Axios.put("/comment/" + this.commentId + "/modify/", commentInfos )
                 //  .then( response => response.json() )
                 .then( res => {
                     console.log("res", res);
                     if(res.status == 200){
-                      console.log("comment modified successfully ", commentInfos);
-                      console.log("addComment modify emit updateCommentsEvent to comment or displayThread", this.commentContent);
+                      // console.log("comment modified successfully ", commentInfos);
+                      // console.log("addComment modify emit updateCommentsEvent to comment or displayThread", this.commentContent);
                       this.resetValues();
                       this.$emit("handleCommentsEvent", res.data );
                     }
