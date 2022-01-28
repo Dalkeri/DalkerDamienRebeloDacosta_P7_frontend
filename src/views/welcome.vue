@@ -9,7 +9,7 @@
             <connectUser />
         </div>
         <!-- component create -->
-        <div v-if="state == 'createUser'">
+        <div v-else>
             <createUser />
         </div>
     <!-- </div> -->

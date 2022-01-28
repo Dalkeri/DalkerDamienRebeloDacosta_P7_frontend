@@ -14,7 +14,9 @@
 
 <script>
 import { mapState } from "vuex"
-import Axios from 'axios';
+import Axios from 'axios'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 export default {
     name: 'connectUser',
@@ -50,10 +52,19 @@ export default {
                         // this.$store.dispatch('userInfo', res.data.user );
                         // localStorage.setItem("groupomaniaToken", JSON.stringify(res.data.token));
                         // this.$router.push('home');
-                        this.connect(res.data);
-                        this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
+                        if(res.status == 200){
+                            this.connect(res.data);
+                            //TODO delete this
+                            this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
+                        } else if(res.status == 401 || res.status == 500){
+                            createToast(res.message,{type: 'danger', timeout:2000, showIcon: true} );
+                        }
+                        
                  })
-                 .catch(error => console.log({error}));
+                 .catch(error => {
+                    console.log({error});
+                    createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+                 })
         },
         connect(datas){
             this.$store.dispatch('userInfo', datas.user );

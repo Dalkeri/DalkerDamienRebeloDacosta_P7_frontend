@@ -6,43 +6,43 @@
     <div class="biography">{{ userToDisplay.bio }}</div>
     <div class="buttons" v-if="userConnected.admin || pageAccount">
 
-      <div v-if="!showInputProfilPic">
-          <button type="button"  class="btn btn-primary"  v-on:click="showInputProfilPic = true">Changer de photo</button>
+      <div class="buttons__cat" v-if="!profilPicForm">
+          <button type="button"  class="btn btn-primary"  v-on:click="profilPicForm = true">Changer de photo</button>
       </div>
-      <div v-if="showInputProfilPic">
+      <div class="buttons__cat" v-if="profilPicForm">
           <hr />
-          <form @submit.prevent="sendProfilPicForm">
+          <form id="profilPicForm" @submit.prevent="sendProfilPicForm">
             <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/><br>
-            <input type="submit" class="btn btn-primary" v-on:click="sendProfilPicForm" value="Enregistrer">
-            <button type="button" class="btn btn-primary" v-on:click="showInputProfilPic = !showInputProfilPic">Annuler</button>
+            <button type="submit" class="btn btn-primary" >Enregistrer</button>
+            <button type="button" class="btn btn-primary" v-on:click="profilPicForm = !profilPicForm">Annuler</button>
           </form>
           
           <hr />
       </div>
 
-      <div v-if="!bioForm">
+      <div class="buttons__cat" v-if="!bioForm">
           <button type="button" class="btn btn-primary" v-on:click="displayBioForm">Modifier la biographie</button>
       </div>
-      <div v-else>
+      <div class="buttons__cat" v-else>
           <hr />
-          <form @submit.prevent="sendBioForm">
+          <form id="bioForm" @submit.prevent="sendBioForm">
             <textarea type="text" class="form-control" v-model="newBio" id="newBio" name="newBio"></textarea><br>
-            <input type="submit" class="btn btn-primary" value="Enregistrer">
+            <button type="submit" class="btn btn-primary" >Enregistrer</button>
             <button type="button" class="btn btn-primary" v-on:click="bioForm = !bioForm">Annuler</button>
           </form>
           
           <hr />
       </div>
 
-      <div v-if="!passwordForm">
+      <div class="buttons__cat" v-if="!passwordForm">
           <button type="button" v-on:click="passwordForm = !passwordForm"  class="btn btn-primary" >Changer de mot de passe</button> 
       </div>
-      <div v-else>
+      <div class="buttons__cat" v-else>
         <hr />
-        <form @submit.prevent="sendPasswordForm">
+        <form id="passwordForm" @submit.prevent="sendPasswordForm">
           <label for="password" class="col-sm-2 col-form-label">Nouveau mot de passe:</label>
-          <input type="text"  class="form-control" id="newPassword" name="newPassword" v-model="newPassword" >
-          <input type="submit" class="btn btn-primary" value="Enregistrer">
+          <input type="text"  class="form-control" id="newPassword" name="newPassword" v-model="newPassword" minlength="8" >
+          <button type="submit" class="btn btn-primary" >Enregistrer</button>
           <button type="button" class="btn btn-primary" v-on:click="passwordForm = !passwordForm">Annuler</button>          
         </form>
         <hr />
@@ -50,10 +50,10 @@
 
       <button type="button" class="btn btn-primary" v-on:click="disconnect">Se déconnecter</button>
 
-      <div v-if="!checkBeforeDelete">
+      <div class="buttons__cat" v-if="!checkBeforeDelete">
           <button type="button" class="btn btn-primary"  v-on:click="checkBeforeDelete = !checkBeforeDelete">Supprimer le compte</button>
       </div>
-      <div v-else>
+      <div class="buttons__cat" v-else>
         <hr />
         <form @submit.prevent="deleteProfil">
           <label for="deleteProfil" class="col-sm-2 col-form-label">Voulez-vous supprimer le compte ?</label>
@@ -83,12 +83,11 @@ export default {
       userToDisplay: '',
       pageAccount: false,
 
-      showInputProfilPic: false,
+      profilPicForm: false,
       newprofilPic: '',
       bioForm: false,
       newBio: '',
       passwordForm: false,
-      oldPassword: '',
       newPassword: '',
 
       threadHistory: '',
@@ -183,12 +182,9 @@ export default {
       
       let formData = new FormData();
       formData.append('image', this.file);
-      formData.append('userIdToModify', this.userToDisplay.id);
-      // let userInfos = {
-      //     profilpic: this.file
-      //   };
-      // console.log("sendProfilPicForm", bio);
-      Axios.post("/user/modifyProfilPic", formData)
+      // formData.append('userIdToModify', this.userToDisplay.id);
+      
+      Axios.post("/user/" + this.userToDisplay.id +"/modifyProfilPic", formData)
            .then( res => {
               console.log("modifyProfilPic ", res)
               if(res.status == 200){
@@ -197,8 +193,8 @@ export default {
                   this.userToDisplay.profilPic = res.data.newProfilPic;
                   // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
-                  this.resetValues();
-                  this.showInputProfilPic = false;
+                  this.newprofilPic = "";
+                  this.profilPicForm = false;
               } else if(res.status == 500){
                 createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
@@ -227,18 +223,17 @@ export default {
            .catch(error => console.log(error));
     },
     sendPasswordForm(){
-      // let passwords = {oldPassword: this.oldPassword, newPassword: this.newPassword};
-
-      Axios.post("/user/modifyPassword", {newPassword: this.newPassword})
+      Axios.post("/user/"+ this.userToDisplay.id +"/modifyPassword", {newPassword: this.newPassword})
            .then( res => {
-              console.log("modifyBio ", res)
-              // if(res.status == 200){
+              console.log("modifyPassword ", res)
+              if(res.status == 200){
                 this.bioForm = !this.passwordForm;
                 createToast(res.data.message,{type: 'success', timeout:2000, showIcon: true} );
-              // } else if(res.status == 500){
-              //   console.log("ok, erreur 500");
-              //   createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
-              // }
+                this.passwordForm = false;
+                this.newPassword = "";
+              } else if(res.status == 401){
+                createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              }
            })
            .catch(error => {
              console.log(error.response.data)
@@ -300,22 +295,20 @@ img{
   margin-bottom: 20px;
 }
 
-// .container {
-//   width: 900px !important;
-// }
-
-button {
-  width: 200px;
-  // margin: auto;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
 .buttons{
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.buttons__cat{
+  width: 100%;
+}
+button {
+  width: 50%;
+  // margin: auto;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 form{
@@ -325,16 +318,20 @@ form{
   margin-left: auto;
   flex-direction: column;
   width: 88% !important;
-
 }
 
+hr{
+  width: 100%;
+}
 input{
-  width: 80%;
+  width: 50%;
 }
 
 label{
   width: 100%;
 }
 
-
+textarea{
+  width: 50%;
+}
 </style>

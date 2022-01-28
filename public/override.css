@@ -1,7 +1,6 @@
-:root{
-    /* --bs-body-bg: #6CC0E5 !important; */
-    /* --bs-body-bg: #cacecf !important; */
-    /* color: #091f43 !important; */
+body{
+    max-width: 1024px;
+    margin: auto;
 }
 
 /* 091f43 blue 9 31 67 */

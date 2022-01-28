@@ -107,7 +107,7 @@ const router = createRouter({
 //if we're not connected, redirect to login page
 router.beforeEach((to, from, next) => {
   const isConnected = localStorage.getItem('groupomaniaToken');
-  console.log(isConnected);
+  console.log({isConnected});
   if( !isConnected && to.name !== 'Welcome'){
     next({ name: 'Welcome' });
   } else{

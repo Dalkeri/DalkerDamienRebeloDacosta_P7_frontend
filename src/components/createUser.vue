@@ -11,7 +11,7 @@
         
         <label for="password" class="col-sm-2 col-form-label">Mot de passe (minimum 8 caractères):</label>
         <!-- check mdp sécurisé -->
-        <input type="text" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8"  class="form-control" placeholder="Password"  required>
+        <input type="text" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8" class="form-control" placeholder="Password" required>
         <label for="password" class="col-sm-2 col-form-label">Répétez le mot de passe:</label>
         <input type="text" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" minlength="8" class="form-control" placeholder="Password"  required>
         <input type="submit" value="Inscription"  class="btn btn-primary">
@@ -46,9 +46,19 @@ export default {
     methods: {
         signUp(e){ //ajouter connexion auto ou message pour indiquer la création
             e.preventDefault();
-        
+
+            // let mailFormat = `^\\w+([\\.-]?\\w+)*@_\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$`;
+            // console.log(mailFormat);
+            // console.log(this.SUEmail);
+            // console.log(this.SUEmail.match(mailFormat));
+            // if( !this.SUEmail.match(mailFormat)){
+            //     createToast("Format d'email incorrect.",{type: 'danger', timeout:2000, showIcon: true} );
+            //     return;
+            // }
+
+
             if(this.SUPassword !== this.SUPassword2){
-                createToast("Les deux mots de passes doivent être identiques",{type: 'danger', timeout:2000, showIcon: true} );
+                createToast("Les deux mots de passes doivent être identiques.",{type: 'danger', timeout:2000, showIcon: true} );
                 return;
             }
             let signUpInfo = {
@@ -66,6 +76,8 @@ export default {
                     if(res.status == 201){
                         this.connect(res.data);
                         this.$store.dispatch('requestConfig', res.data.token);
+                    } else if(res.status == 401 || res.status == 500){
+                         createToast(res.message,{type: 'danger', timeout:2000, showIcon: true} );
                     }
                 })
                 .catch(error => console.log({error}));
