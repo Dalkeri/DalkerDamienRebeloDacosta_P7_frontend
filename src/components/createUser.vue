@@ -65,12 +65,17 @@ export default {
                     console.log("res", res)
                     if(res.status == 201){
                         this.connect(res.data);
-                        this.$store.dispatch('requestConfig', res.data.token);
+                    //TODO useless here ?
                     } else if(res.status == 401 || res.status == 500){
                          createToast(res.message,{type: 'danger', timeout:2000, showIcon: true} );
                     }
                 })
-                .catch(error => console.log({error}));
+                .catch(error => {
+                    console.log(error);
+                    if(error.response.data.message){
+                        createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+                    }
+                });
 
         },
         connect(datas){

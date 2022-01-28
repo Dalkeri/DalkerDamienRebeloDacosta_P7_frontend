@@ -52,7 +52,7 @@ export default {
             //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
         }),
         ...mapGetters([
-          'getRequestConfig'
+          // 'getRequestConfig'
         ])
     },
   methods: {
@@ -66,7 +66,7 @@ export default {
     deleteComment(){
       console.log("Delete comment ",this.comment.id);
 
-      Axios.delete("/comment/" + this.comment.id, this.$store.getters.getRequestConfig )
+      Axios.delete("/comment/" + this.comment.id)
               //  .then( response => response.json() )
             .then( res => {
               console.log("res", res);

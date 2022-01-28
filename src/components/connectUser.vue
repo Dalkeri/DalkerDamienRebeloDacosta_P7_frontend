@@ -55,7 +55,7 @@ export default {
                         if(res.status == 200){
                             this.connect(res.data);
                             //TODO delete this
-                            this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
+                            // this.$store.dispatch('requestConfig', JSON.stringify(res.data.token));
                         } else if(res.status == 401 || res.status == 500){
                             createToast(res.message,{type: 'danger', timeout:2000, showIcon: true} );
                         }

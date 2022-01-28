@@ -7,14 +7,14 @@ export default createStore({
     navMenu: 'none',
     userConnected: '',
     actualRoute: 'home',
-    requestConfig: {}
+    // requestConfig: {}
   },
   getters:{
-    getRequestConfig: state => {
-      // console.log("GET REQUEST CONFIG");
-      let config = JSON.stringify(state.requestConfig);
-      return JSON.parse(config);
-    },
+    // getRequestConfig: state => {
+    //   // console.log("GET REQUEST CONFIG");
+    //   let config = JSON.stringify(state.requestConfig);
+    //   return JSON.parse(config);
+    // },
     getUserBio: state => {
       // console.log("getUserBio");
       return state.userConnected.bio;
@@ -29,19 +29,19 @@ export default createStore({
     //   state.count++;
     //   console.log(state.count);
     // },
-    setRequestConfig(state, config){
-      // console.log("config", config);
-      if(config) {
-        state.requestConfig = {
-          headers: { 
-            Authorization: "Bearer " + JSON.parse(config)
-          }
-        }
-      } else {
-        state.requestConfig = "";
-      }
+    // setRequestConfig(state, config){
+    //   // console.log("config", config);
+    //   if(config) {
+    //     state.requestConfig = {
+    //       headers: { 
+    //         Authorization: "Bearer " + JSON.parse(config)
+    //       }
+    //     }
+    //   } else {
+    //     state.requestConfig = "";
+    //   }
       
-    },
+    // },
     saveToken (state, token){
       state.token = token;
       // console.log("state.token", state.token);
@@ -75,11 +75,11 @@ export default createStore({
     actualRoute(context, state){
       console.log("actualroute", state);
       context.commit('setActualRoute', state);
-    },
-    requestConfig(context, state){
-      // console.log("setRequestConfig", state);
-      context.commit('setRequestConfig', state);
     }
+    // ,
+    // requestConfig(context, state){
+    //   context.commit('setRequestConfig', state);
+    // }
   },
   // created: {
   //   console.log("created vuex");

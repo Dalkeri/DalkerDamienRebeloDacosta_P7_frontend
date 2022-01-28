@@ -30,7 +30,7 @@ export default {
             userConnected: ({userConnected}) => userConnected
         }),
         ...mapGetters([
-          'getRequestConfig'
+          // 'getRequestConfig'
         ])
   },
   created(){
@@ -51,7 +51,7 @@ export default {
             };
             console.log({commentInfos});
 
-            console.log("request", this.$store.getters.getRequestConfig);
+            // console.log("request", this.$store.getters.getRequestConfig);
 
             //if we didn't get props it's a new comment
             if( !this.comment ){

@@ -96,7 +96,7 @@ export default {
             //ajouter user pour savoir si il est là ou pas, si oui, on affiche le connexion / s'inscrire, sinon "Mon profil"
         }),
         ...mapGetters([
-          'getRequestConfig'
+          // 'getRequestConfig'
         ])
     },
   methods: {
@@ -113,7 +113,7 @@ export default {
     deleteThread(){
       console.log("Delete thread ",this.thread.id);
  
-      axios.delete("/thread/" + this.thread.id, this.$store.getters.getRequestConfig )
+      axios.delete("/thread/" + this.thread.id )
               //  .then( response => response.json() )
             .then( res => {
               console.log("res", res);

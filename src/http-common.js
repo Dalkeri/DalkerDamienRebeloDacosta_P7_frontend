@@ -8,8 +8,5 @@ export default axios.create({
 });
 
 
-// TODO add this here 
-// let config = {
-//           headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem('groupomaniaToken'))}
-//         } 
+
         

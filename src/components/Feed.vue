@@ -94,7 +94,12 @@ export default {
                 this.threads = res.data;
                 // this.$emit("myEvent");
               })
-            .catch(error => console.log("trouble while fetching datas: ", error));      
+            .catch(error => {
+              console.log(error);
+              if(error.response.data.message){
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              }
+            });      
       }
   },
   created(){

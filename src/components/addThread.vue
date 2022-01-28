@@ -1,10 +1,10 @@
 <template>
   <div class="addThread">
-    <form @submit.prevent="handleThread">
+    <form id="addThreadForm" @submit.prevent="handleThread">
         <label for="fname" class="col-sm-2 col-form-label">Titre:</label>
-        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control" >
+        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control">
         <label for="lname" class="col-sm-2 col-form-label">Contenu:</label>
-        <input type="textarea" v-model="threadContent" id="threadContent" name="threadContent" class="form-control">
+        <textarea rows="3" v-model="threadContent" id="threadContent" name="threadContent" class="form-control"></textarea>
         <label class="col-sm-2 col-form-label">Image:</label>
         <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/>
         <div v-if="this.threadImage">
@@ -19,7 +19,8 @@
 
 import Axios from 'axios'
 import { mapState } from "vuex"
-
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 export default {
   name: 'addThread',
@@ -82,14 +83,15 @@ export default {
 
         //new creation
         if( !this.datas ) {
-          // Axios.post("/thread/create", threadInfos, config )
           Axios.post("/thread/create", formData )
-                //  .then( response => response.json() )
               .then( res => {
                 console.log("res", res);
-                console.log("1 addThread emit updateThreadEvent to displayThread");
+                // console.log("1 addThread emit updateThreadEvent to displayThread");
                 this.$emit("updateThreadEvent");
                 this.resetValues();
+              })
+              .catch( error => {
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               });
         } else { //modification
           console.log("/thread/modify/" + this.datas.id);
@@ -104,20 +106,19 @@ export default {
                   this.resetValues();
                 }
                 // this.resetValues();
+              })
+              .catch( error => {
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               });
         }
-        // this.$emit("myEvent");
         
 
       },
       resetValues(){
-        console.log("reset values");
-        //two way bindings
-        let form = document.getElementsByTagName("form")[0];
-        form.reset(); 
-        // this.threadTitle = "";
-        // this.threadContent = "";
-        // this.file = "";
+        // console.log("reset values");
+        this.threadTitle = "";
+        this.threadContent = "";
+        this.file = "";
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];

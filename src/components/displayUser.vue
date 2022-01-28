@@ -4,6 +4,8 @@
     <h3>{{ userToDisplay.firstName }} {{ userToDisplay.lastName }}</h3>
     <div>Biographie :</div>
     <div class="biography">{{ userToDisplay.bio }}</div>
+    <button type="button" class="btn btn-primary" v-on:click="disconnect" v-if="pageAccount">Se déconnecter</button>
+
     <div class="buttons" v-if="userConnected.admin || pageAccount">
 
       <div class="buttons__cat" v-if="!profilPicForm">
@@ -47,8 +49,6 @@
         </form>
         <hr />
       </div>
-
-      <button type="button" class="btn btn-primary" v-on:click="disconnect">Se déconnecter</button>
 
       <div class="buttons__cat" v-if="!checkBeforeDelete">
           <button type="button" class="btn btn-primary"  v-on:click="checkBeforeDelete = !checkBeforeDelete">Supprimer le compte</button>
@@ -105,7 +105,7 @@ export default {
             userConnected: ({userConnected}) => userConnected
         }),
         ...mapGetters([
-          'getRequestConfig',
+          // 'getRequestConfig',
         ])
   },
   created(){
@@ -131,10 +131,6 @@ export default {
         
         this.userId = this.route.params.id;
 
-        // let config = {
-        //     headers: { Authorization: "Bearer " + JSON.parse(localStorage.getItem   ('groupomaniaToken'))}
-        // }
-        // console.log(config);
         Axios.post("/user/getUserById", this.route.params)
             .then( res => {
               if(res.status == 200){
@@ -142,8 +138,8 @@ export default {
                 this.userToDisplay = res.data.user;
               }
             })
-            .catch(error => {
-                console.log(error);
+            .catch( () => {
+                // console.log(error);
                 this.$router.push('/home');
             });
     
@@ -205,7 +201,12 @@ export default {
                 createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
-           .catch(error => console.log(error));
+           .catch(error => {
+              console.log(error);
+              if(error.response.data.message){
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              }
+            });
     },
     sendBioForm(){
       let bio = {bio: this.newBio};
@@ -222,11 +223,17 @@ export default {
                   this.$store.dispatch('userInfo', updateUser);
                   this.userToDisplay.bio = this.newBio;
                   this.bioForm = !this.bioForm;
+                  //TODO useless here ?
               } else if(res.status == 500){
                 createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
-           .catch(error => console.log(error));
+           .catch(error => {
+              console.log(error);
+              if(error.response.data.message){
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              }
+            });
     },
     sendPasswordForm(){
       Axios.post("/user/"+ this.userToDisplay.id +"/modifyPassword", {newPassword: this.newPassword})
@@ -242,10 +249,11 @@ export default {
               }
            })
            .catch(error => {
-             console.log(error.response.data)
-              createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
-
-             });
+              console.log(error);
+              if(error.response.data.message){
+                createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
+              }
+            });
            
     },
     resetValues(){
@@ -262,7 +270,7 @@ export default {
       console.log("route", this.$route);
       let idToDelete = this.$route.params.id ? this.$route.params.id : this.userConnected.id;
 
-      Axios.delete("/user/" + idToDelete, this.$store.getters.getRequestConfig)
+      Axios.delete("/user/" + idToDelete)
            .then( res => {
              console.log("res deleting account");
              if(res.status == 200){
@@ -271,7 +279,7 @@ export default {
                 if(this.$route.fullPath == "/account"){
                   console.log("disconnecting");
                   this.$store.dispatch('userInfo', '');
-                  this.$store.dispatch('requestConfig', '');
+                  // this.$store.dispatch('requestConfig', '');
                   localStorage.removeItem("groupomaniaToken");
                   this.userDeleted = true;
                   // this.$router.push('/');
