@@ -7,7 +7,7 @@
 // import Axios from 'axios';
 // import { useRoute } from 'vue-router';
 import headerNav from '../components/headerNav.vue';
-import displayUser from '../components/displayUser.vue';
+import displayUser from '../components/account-user/displayUser.vue';
 
 
 export default {

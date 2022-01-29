@@ -17,8 +17,8 @@
 
 <script>
 import Axios from 'axios'
-import connectUser from '../components/connectUser.vue';
-import createUser from '../components/createUser.vue';
+import connectUser from '../components/Welcome/connectUser.vue';
+import createUser from '../components/Welcome/createUser.vue';
 // import { mapState } from "vuex"
 
 

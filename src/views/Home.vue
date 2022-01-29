@@ -9,8 +9,8 @@
 
 <script>
 // @ is an alias to /src
-import addThread from '../components/addThread.vue';
-import Feed from '../components/Feed.vue';
+import addThread from '../components/Home/addThread.vue';
+import Feed from '../components/Home/Feed.vue';
 import headerNav from '../components/headerNav.vue';
 
 // import store from '../store/index.js'

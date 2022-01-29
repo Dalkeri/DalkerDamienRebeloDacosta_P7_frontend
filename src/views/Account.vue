@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import displayUser from '../components/displayUser.vue';
+import displayUser from '../components/account-user/displayUser.vue';
 import headerNav from '../components/headerNav.vue';
 
 export default {

@@ -3,23 +3,19 @@
     <button type="button" v-on:click="test('coucou')">Click Me!</button>
 
 
-    <!-- <messageHandler type="success" message="coucou" display="true" /> -->
     <div class="threads" v-if="datasFetched">
       <section class="thread" v-for="thread in threads" :key="thread.id">
           <displayThread :thread="thread"  @update-thread-event="getThreads" @handle-comments-event="handleComments"/>
       </section>
-      <!-- <displayThread v-bind="threads"/> -->
     </div>
     <div class="loading" v-else>
       <h3>Loading ...</h3>
-      <!-- composant loading -->
     </div>
   </div>
 </template>
 
 <script>
 import displayThread from './displayThread.vue'
-// import messageHandler from './messageHandler.vue'
 import axios from 'axios';
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
@@ -30,7 +26,6 @@ export default {
   name: 'Feed',
   components: {
     displayThread,
-    // messageHandler,
   },
   props: {
     reloadThreads: Boolean
