@@ -83,7 +83,6 @@ export default {
  
       axios.delete("/thread/" + this.thread.id )
             .then( res => {
-              console.log("res", res);
               if(res.status == 200){
                 this.$emit("updateThreadEvent");
               }

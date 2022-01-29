@@ -92,7 +92,6 @@ export default {
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];
-        console.log(this.file);
       }
   }
 }

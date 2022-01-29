@@ -34,7 +34,6 @@ export default {
 
             Axios.post("/user/login", signInInfo )
                 .then( res => {
-                    console.log("res", res);
                     if(res.status == 200){
                         this.connect(res.data);
                     } else if(res.status == 401 || res.status == 500){

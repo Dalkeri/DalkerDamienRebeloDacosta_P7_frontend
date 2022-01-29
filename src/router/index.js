@@ -82,7 +82,6 @@ const routes = [
       }
 
       if(!isValid(to.params.id)) {
-        console.log("here");
         next({name: 'Home'});
       } else {
         next();

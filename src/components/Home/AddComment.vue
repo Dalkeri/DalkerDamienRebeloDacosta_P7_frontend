@@ -56,7 +56,6 @@ export default {
           } else {
               Axios.put("/comment/" + this.commentId + "/modify/", commentInfos )
               .then( res => {
-                  console.log("res", res);
                   if(res.status == 200){
                     this.resetValues();
                     this.$emit("handleCommentsEvent", res.data );

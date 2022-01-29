@@ -116,10 +116,9 @@ export default {
     } else {        
         this.userId = this.route.params.id;
 
-        Axios.post("/user/getUserById", this.route.params)
+        Axios.get("/user/getUserById", this.route.params)
             .then( res => {
               if(res.status == 200){
-                console.log("/user/getUserById", res);
                 this.userToDisplay = res.data.user;
               }
             })
@@ -140,13 +139,11 @@ export default {
   },
   methods: {
     disconnect(){
-      console.log("disconnect ?");
       localStorage.removeItem("groupomaniaToken");
       this.$store.dispatch('userInfo', '');
       this.$router.go('Welcome');
     },
     displayBioForm(){
-      console.log(this.userConnected)
       this.newBio = this.userToDisplay.bio;
       this.bioForm = !this.bioForm;
     },
@@ -155,7 +152,6 @@ export default {
     },
     handleFileUpload( event ){
       this.file = event.target.files[0];
-      console.log(this.file);
     },
     sendProfilPicForm(){      
       let formData = new FormData();
@@ -163,7 +159,6 @@ export default {
       
       Axios.put("/user/" + this.userToDisplay.id +"/modifyProfilPic", formData)
            .then( res => {
-              console.log("modifyProfilPic ", res)
               if(res.status == 200){
                   let updateUser = this.userConnected;
                   this.userToDisplay.profilPic = res.data.newProfilPic;
@@ -186,7 +181,6 @@ export default {
 
       Axios.put("/user/" + this.userToDisplay.id +"/modifyBio" , bio)
            .then( res => {
-              console.log("modifyBio ", res)
               if(res.status == 200){
                   let updateUser = this.userConnected;
                   this.$store.dispatch('userInfo', updateUser);
@@ -198,7 +192,7 @@ export default {
               }
            })
            .catch(error => {
-              console.log(error);
+              // console.log(error);
               if(error.response.data.message){
                 createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
@@ -207,7 +201,6 @@ export default {
     sendPasswordForm(){
       Axios.put("/user/"+ this.userToDisplay.id +"/modifyPassword", {newPassword: this.newPassword})
            .then( res => {
-              console.log("modifyPassword ", res)
               if(res.status == 200){
                 this.bioForm = !this.passwordForm;
                 createToast(res.data.message,{type: 'success', timeout:2000, showIcon: true} );
@@ -218,7 +211,7 @@ export default {
               }
            })
            .catch(error => {
-              console.log(error);
+              // console.log(error);
               if(error.response.data.message){
                 createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
@@ -226,9 +219,7 @@ export default {
            
     },
     deleteProfil(){
-      console.log("delete user")
-      console.log("route", this.$route);
-      let idToDelete = this.$route.params.id ? this.$route.params.id : this.userConnected.id;
+      let idToDelete = this.userToDisplay.id;
 
       Axios.delete("/user/" + idToDelete)
            .then( res => {
@@ -238,7 +229,7 @@ export default {
                   localStorage.removeItem("groupomaniaToken");
                   this.userDeleted = true;
                   this.$router.push({ name: 'Welcome' });
-                } else { //TODO
+                } else { 
                   this.$router.go('Home');
                 }
              }
@@ -269,9 +260,11 @@ export default {
     flex-direction: column;
     align-items: center;
   }
+
   .buttons__cat{
     width: 100%;
   }
+
   button {
     width: 50%;
     margin-bottom: 10px;
@@ -306,15 +299,19 @@ export default {
       margin-right: auto;
       margin-left: auto;
     }
+
     button {
       width: 80%;
     }
+
     form{
       width: 80% !important;
     }
+
     input{
       width: 75%;
     }
+
     textarea{
       width: 75%;
     }

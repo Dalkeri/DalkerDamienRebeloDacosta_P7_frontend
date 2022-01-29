@@ -34,8 +34,8 @@ export default {
     };
   },
   watch: {
-    reloadThreads: function(newVal, oldVal) {
-      console.log("Feed reloadThread changed from ", oldVal, " to ", newVal);
+    reloadThreads() {
+      // console.log("Feed reloadThread changed from ", oldVal, " to ", newVal);
       this.getThreads();
     }
   },
