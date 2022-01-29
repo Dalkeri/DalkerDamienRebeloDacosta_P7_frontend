@@ -2,7 +2,7 @@
   <div class="addThread">
     <form id="addThreadForm" @submit.prevent="handleThread">
         <label for="fname" class="col-sm-2 col-form-label">Titre:</label>
-        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control">
+        <input type="text" v-model="threadTitle" id="threadTitle" name="threadTitle" class="form-control" required>
         <label for="lname" class="col-sm-2 col-form-label">Contenu:</label>
         <textarea rows="3" v-model="threadContent" id="threadContent" name="threadContent" class="form-control"></textarea>
         <label class="col-sm-2 col-form-label">Image:</label>
