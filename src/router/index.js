@@ -3,7 +3,6 @@ import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
 import Account from '../views/Account.vue'
 import User from '../views/User.vue'
-// import Thread from '../views/Thread.vue'
 
 const routes = [
   {
@@ -47,7 +46,6 @@ const routes = [
     name: 'Account',
     component: Account,
     meta: {
-      // transition: 'slide-right',
       title: 'Account page',
       metaTags: [
         {
@@ -60,17 +58,12 @@ const routes = [
         }
       ]
     },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/user/:id',
     name: 'User',
     component: User,
     meta: {
-      // transition: 'slide-right',
       title: 'User page',
       metaTags: [
         {
@@ -105,14 +98,12 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  //base: process.env.BASE_URL,
   routes
 })
 
 //if we're not connected, redirect to login page
 router.beforeEach((to, from, next) => {
   const isConnected = localStorage.getItem('groupomaniaToken');
-  console.log({isConnected});
   if( !isConnected && to.name !== 'Welcome'){
     next({ name: 'Welcome' });
   } else{

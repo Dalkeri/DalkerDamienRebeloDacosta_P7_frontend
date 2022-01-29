@@ -1,12 +1,18 @@
 body{
     max-width: 1024px;
     margin: auto;
+    background-image: linear-gradient(90deg, #d1515a, #091f43);
 }
 
-/* 091f43 blue 9 31 67 */
-/* d1515a red 209 81 90 88%*/
+hr{
+    color: white;
+    width: 100%;
+}
 
-/* 6CC0E5 <3 */
-/* 9ebeca */
-/* cacecf */
-/* e1e5e6 */
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+}

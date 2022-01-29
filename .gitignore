@@ -22,7 +22,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-
-truc.js
 divers
-src/components/displayThread_copy.vue

@@ -1,5 +1,7 @@
 # frontend
 
+This project is a MVP for a social media website.
+
 ## Project setup
 ```
 npm install

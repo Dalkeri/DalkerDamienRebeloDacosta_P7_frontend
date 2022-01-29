@@ -1,91 +1,82 @@
 <template>
-  <div class="AddComment">
-    <input type="text" v-model="commentContent" id="commentContent" name="commentContent">
-    <button type="button" v-on:click="createComment">Commenter</button>
+  <div class="addComment">
+    <hr />
+    <div>Ajouter un commentaire:</div>
+    <input type="textarea" class="form-control"  v-model="commentContent" id="commentContent" name="commentContent">
+    <button type="button" class="btn btn-primary" v-on:click="createComment">Commenter</button>
   </div>
 </template>
 
 <script>
 import Axios from 'axios'
-import { mapState, mapGetters } from "vuex"
+import { mapState } from "vuex"
+import { createToast } from 'mosha-vue-toastify';
+import 'mosha-vue-toastify/dist/style.css';
 
 export default {
   name: 'AddComment',
   props: {
-    // comment: Object,
     comment: String,
     commentId: Number,
     threadId: Number,
   },
   data: function() {
     return { 
-    //   datas: this.comment,
       commentContent:"",
-    //   threadId: this.idThread,
-    //   commentId: this.idComment,
     };
   },
   computed: {
-        ...mapState({
-            userConnected: ({userConnected}) => userConnected
-        }),
-        ...mapGetters([
-          // 'getRequestConfig'
-        ])
+    ...mapState({
+      userConnected: ({userConnected}) => userConnected
+    })
   },
   created(){
-    // if( this.comment ){
       this.commentContent = this.comment
-    // }
   },
   methods: {
     createComment(e){
-        e.preventDefault();
-        console.log("ajout de commentaire", this.commentContent);
-        if( this.commentContent ){
-            let commentInfos = {
-                content: this.commentContent,
-                visible: true,
-                threadId: this.threadId,
-                userId: this.userConnected.id
-            };
-            console.log({commentInfos});
+      e.preventDefault();
+      if( this.commentContent ){
+          let commentInfos = {
+              content: this.commentContent,
+              visible: true,
+              threadId: this.threadId,
+              userId: this.userConnected.id
+          };
 
-            // console.log("request", this.$store.getters.getRequestConfig);
-
-            //if we didn't get props it's a new comment
-            if( !this.comment ){
-                Axios.post("/comment/create/",  commentInfos )
-                    .then( res => {
-                        console.log("res", res);
-                        if(res.status == 200){
-                          console.log("addComment create emit updateCommentsEvent to comment or displayThread", this.commentContent);
-                          this.resetValues();
-                          this.$emit("handleCommentsEvent", res.data );
-                        }
-                    }); 
-            } else {    //ternaire au lieu de if else ou if normal
-                Axios.put("/comment/" + this.commentId + "/modify/", commentInfos )
-                //  .then( response => response.json() )
-                .then( res => {
-                    console.log("res", res);
-                    if(res.status == 200){
-                      // console.log("comment modified successfully ", commentInfos);
-                      // console.log("addComment modify emit updateCommentsEvent to comment or displayThread", this.commentContent);
-                      this.resetValues();
-                      this.$emit("handleCommentsEvent", res.data );
-                    }
-                });
-            }
-        } else {
-          console.log("content empty");
+          //if we didn't get props it's a new comment
+          if( !this.comment ){
+              Axios.post("/comment/create/",  commentInfos )
+                 .then( res => {
+                      if(res.status == 200){ //TODO
+                        this.resetValues();
+                        this.$emit("handleCommentsEvent", res.data );
+                      }
+                  }); 
+          } else {
+              Axios.put("/comment/" + this.commentId + "/modify/", commentInfos )
+              .then( res => {
+                  console.log("res", res);
+                  if(res.status == 200){
+                    this.resetValues();
+                    this.$emit("handleCommentsEvent", res.data );
+                  }
+              });
+          }
+      } else {
+        createToast("Contenu du commentaire vide.",{type: 'danger', timeout:2000, showIcon: true} );
       }
     },
     resetValues(){
-        console.log("reset values");
         this.commentContent = "";
-
-      },
+    },
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .addComment{
+    margin-top: 50px;
+    margin-bottom: 20px;
+  }
+</style>

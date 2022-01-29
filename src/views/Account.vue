@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import displayUser from '../components/account-user/displayUser.vue';
-import headerNav from '../components/headerNav.vue';
+import displayUser from '../components/account-user/DisplayUser.vue';
+import headerNav from '../components/HeaderNav.vue';
 
 export default {
   components: { 
@@ -18,19 +18,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
-img{
-  width: 20%;
-  margin: auto;
-}
+  img{
+    width: 20%;
+    margin: auto;
+  }
 
-.container {
-  width: 900px !important;
-}
+  .container {
+    width: 900px !important;
+  }
 
-button {
-  width: 150px;
-  margin: auto;
-}
-
-
+  button {
+    width: 150px;
+    margin: auto;
+  }
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="headerNav">
         <div v-if="homepage">
+            <img id="groupomaniaLogo" src="../assets/groupomania_logo_with_text.png" alt="Groupomania logo">
             <div>
-                <img :src="this.userConnected.profilPic" alt="Profil picture">
-                <!-- <router-link to="/account">Mon compte</router-link> -->
+                <img id="profilPic" :src="this.userConnected.profilPic" alt="Profil picture">
                 <router-link to="/account">{{this.userConnected.firstName}} {{this.userConnected.lastName}}</router-link>
             </div>
         </div>
@@ -16,13 +16,9 @@
 
 <script>
 import { mapState } from "vuex";
-// import { useRoute } from 'vue-router';
-
-// import Axios from 'axios';
-
 
 export default {
-    name: 'headerNav',
+    name: 'HeaderNav',
     data() {
         return {
             homepage: false,
@@ -30,15 +26,10 @@ export default {
     },
     computed: {
         ...mapState({
-            navMenu: ({ navMenu }) => navMenu,
-            userConnected: ({userConnected}) => userConnected,
-            // actualRoute: ({actualRoute}) => actualRoute
-            
+            userConnected: ({userConnected}) => userConnected,            
         }),
     },
     created(){
-        // let route = useRoute();
-        console.log("headernav created", this.$route.path);
         if(this.$route.path == "/home"){
             this.homepage = true;
         } else {
@@ -46,7 +37,6 @@ export default {
         }
     },
     mouted(){
-        console.log("headernav mounted", this.$route.path);
         if(this.$route.path == "/home"){
             this.homepage = true;
         } else {
@@ -54,7 +44,6 @@ export default {
         }
     },
     updated(){
-        console.log("headernav  updated", this.$route.path);
         if(this.$route.path == "/home"){
             this.homepage = true;
         } else {
@@ -62,20 +51,8 @@ export default {
         }
     },
     methods: {
-        // disconnect(){
-        //     this.$store.dispatch('userInfo', '');
-        //     this.$store.dispatch('requestConfig', '');
-        //     localStorage.removeItem("groupomaniaToken");
-        //     this.$router.push('/');
-        // },
-        // routeChanged(newRoute){
-        //     console.log("my account");
-        //     this.$store.dispatch('actualRoute', newRoute);
-
-        // },
         myAccount(){
             this.$router.push('/account');
-
         }
     },
 }
@@ -90,15 +67,18 @@ export default {
         margin-right: 10px;
         margin-left: 10px;
     }
-    img{
-        width:100px;
-        // height:50px;
+
+    #profilPic{
+        max-height:100px;
+        // padding-top: 100%;
         margin-right: 10px;
         // border-radius: 50%;
         overflow: hidden;
     }
 
-    hr{
-        color: white;
+    #groupomaniaLogo{
+        height: 50px;
+        margin-bottom: 20px;
     }
+
 </style>

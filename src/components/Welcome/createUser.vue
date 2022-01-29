@@ -1,25 +1,24 @@
 <template>
     <form @submit.prevent="signUp">
         <label for="lname" class="col-sm-2 col-form-label">Nom:</label>
-        <input type="text" id="signUpLName" name="signUpLName" v-model="SULName" class="form-control" placeholder="Nom"  required>
-        <label for="fname" class="col-sm-2 col-form-label">Prenom:</label>
-        <input type="text" id="signUpFName" name="signUpFName" v-model="SUFName" class="form-control" placeholder="Prenom"  required>
-        <label for="email" class="col-sm-2 col-form-label">Email:</label>
+        <input type="text" id="signUpLName" name="signUpLName" v-model="SULName" class="form-control" placeholder="Nom" required>
 
-        <!-- regex (+ back) -->
-        <input type="email" id="signUpEmail" name="signUpEmail" v-model="SUEmail" pattern="[a-z0-9\._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" class="form-control" placeholder="email@example.com"  required>
-        
+        <label for="fname" class="col-sm-2 col-form-label">Prenom:</label>
+        <input type="text" id="signUpFName" name="signUpFName" v-model="SUFName" class="form-control" placeholder="Prenom" required>
+
+        <label for="email" class="col-sm-2 col-form-label">Email:</label>
+        <input type="email" id="signUpEmail" name="signUpEmail" v-model="SUEmail" class="form-control" placeholder="email@example.com" required>
+
         <label for="password" class="col-sm-2 col-form-label">Mot de passe (minimum 8 caractères):</label>
-        <!-- check mdp sécurisé -->
-        <input type="text" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8" class="form-control" placeholder="Password" required>
+        <input type="password" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8" class="form-control" placeholder="Password" required>
+
         <label for="password" class="col-sm-2 col-form-label">Répétez le mot de passe:</label>
-        <input type="text" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" minlength="8" class="form-control" placeholder="Password"  required>
+        <input type="password" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" minlength="8" class="form-control" placeholder="Password" required>
         <input type="submit" value="Inscription"  class="btn btn-primary">
     </form> 
 </template>
 
 <script>
-import { mapState } from "vuex"
 import Axios from 'axios'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
@@ -38,11 +37,6 @@ export default {
 
         }
     },
-    computed: {
-        ...mapState({
-            navMenu: ({ navMenu }) => navMenu
-        }),
-    },
     methods: {
         signUp(e){ //ajouter connexion auto ou message pour indiquer la création
             e.preventDefault();
@@ -51,21 +45,25 @@ export default {
                 createToast("Les deux mots de passes doivent être identiques.",{type: 'danger', timeout:2000, showIcon: true} );
                 return;
             }
+            
+            let mailFormat = `^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$`;
+            if( !this.SUEmail.match(mailFormat)){
+                createToast("Le format de l'email est incorrect.",{type: 'danger', timeout:2000, showIcon: true} );
+                return;
+            }
+
             let signUpInfo = {
                 firstName: this.SUFName,
                 lastName: this.SULName,
                 email: this.SUEmail,
                 password: this.SUPassword
             }
-
-            console.log("signup", signUpInfo); 
             
             Axios.post("/user/signup", signUpInfo )
                  .then( res => {
-                    console.log("res", res)
                     if(res.status == 201){
                         this.connect(res.data);
-                    //TODO useless here ?
+                    //TODO
                     } else if(res.status == 401 || res.status == 500){
                          createToast(res.message,{type: 'danger', timeout:2000, showIcon: true} );
                     }
@@ -82,13 +80,9 @@ export default {
             this.$store.dispatch('userInfo', datas.user );
             localStorage.setItem("groupomaniaToken", JSON.stringify(datas.token));
             Axios.defaults.headers.common.Authorization = 'Bearer ' + datas.token;
-            console.log("connect", datas.token);
-            console.log(Axios.defaults.headers.common.Authorization);
             this.$router.push('home');
         }
     }
-
-   
 }
 </script>
 

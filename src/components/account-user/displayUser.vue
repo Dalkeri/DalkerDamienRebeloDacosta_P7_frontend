@@ -17,8 +17,7 @@
             <input type="file" id="uploadFile" class="form-control" @change="handleFileUpload( $event )"/><br>
             <button type="submit" class="btn btn-primary" >Enregistrer</button>
             <button type="button" class="btn btn-primary" v-on:click="profilPicForm = !profilPicForm">Annuler</button>
-          </form>
-          
+          </form>          
           <hr />
       </div>
 
@@ -32,7 +31,6 @@
             <button type="submit" class="btn btn-primary" >Enregistrer</button>
             <button type="button" class="btn btn-primary" v-on:click="bioForm = !bioForm">Annuler</button>
           </form>
-          
           <hr />
       </div>
 
@@ -43,7 +41,7 @@
         <hr />
         <form id="passwordForm" @submit.prevent="sendPasswordForm">
           <label for="password" class="col-sm-2 col-form-label">Nouveau mot de passe:</label>
-          <input type="text"  class="form-control" id="newPassword" name="newPassword" v-model="newPassword" minlength="8" >
+          <input type="password"  class="form-control" id="newPassword" name="newPassword" v-model="newPassword" minlength="8" >
           <button type="submit" class="btn btn-primary" >Enregistrer</button>
           <button type="button" class="btn btn-primary" v-on:click="passwordForm = !passwordForm">Annuler</button>          
         </form>
@@ -62,14 +60,13 @@
         </form>
         <hr />
       </div>
-      <!-- <button type="button" class="btn btn-primary"  v-on:click="deleteProfil()">Supprimer le compte</button> -->
     </div>
   </div>
   
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import { useRoute } from 'vue-router';
 import Axios from 'axios';
 import { createToast } from 'mosha-vue-toastify';
@@ -101,34 +98,22 @@ export default {
     };
   },
    computed: {
-        ...mapState({
-            userConnected: ({userConnected}) => userConnected
-        }),
-        ...mapGetters([
-          // 'getRequestConfig',
-        ])
+    ...mapState({
+      userConnected: ({userConnected}) => userConnected
+    })
   },
   created(){
     this.route = useRoute();
-    // console.log("created", this.userConnected);
     if(this.$route.path == "/account"){
         this.pageAccount = true;
     }
   },
   mounted(){
     this.route = useRoute();
-    console.log("MOUNTED", this.$route.path);
       
     if(this.$route.path == "/account"){
-        // console.log("IF");
-        // console.log("connected", this.userConnected);
-
-        // this.pageAccount = true;
         this.userToDisplay = this.userConnected;
-    } else {
-
-        console.log("MOUNTED 2", this.userConnected);
-        
+    } else {        
         this.userId = this.route.params.id;
 
         Axios.post("/user/getUserById", this.route.params)
@@ -146,26 +131,19 @@ export default {
     }     
   },
   updated(){
-   
-    //TODO: put this in created ? or mounted ? or beforeRoute ?
-
     if(this.userToDisplay == '' && this.$route.fullPath == '/account'){
       this.userToDisplay = this.userConnected;
     }
     if(this.userConnected.id == this.route.params.id && !this.userDeleted){
-      // console.log("coucou");
       this.$router.push("/account");
     }
   },
   methods: {
     disconnect(){
       console.log("disconnect ?");
-      // this.$store.dispatch('requestConfig', '');
       localStorage.removeItem("groupomaniaToken");
       this.$store.dispatch('userInfo', '');
-      // this.$router.push({ path: '/' });
       this.$router.go('Welcome');
-
     },
     displayBioForm(){
       console.log(this.userConnected)
@@ -179,30 +157,25 @@ export default {
       this.file = event.target.files[0];
       console.log(this.file);
     },
-    sendProfilPicForm(){
-      // let bio = {bio: this.newProfilPic};
-      
+    sendProfilPicForm(){      
       let formData = new FormData();
       formData.append('image', this.file);
-      // formData.append('userIdToModify', this.userToDisplay.id);
       
-      Axios.post("/user/" + this.userToDisplay.id +"/modifyProfilPic", formData)
+      Axios.put("/user/" + this.userToDisplay.id +"/modifyProfilPic", formData)
            .then( res => {
               console.log("modifyProfilPic ", res)
               if(res.status == 200){
-                  //change bio in store
                   let updateUser = this.userConnected;
                   this.userToDisplay.profilPic = res.data.newProfilPic;
-                  // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
                   this.newprofilPic = "";
                   this.profilPicForm = false;
-              } else if(res.status == 500){
+              } else if(res.status == 500){ //TODO
                 createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
            .catch(error => {
-              console.log(error);
+              // console.log(error);
               if(error.response.data.message){
                 createToast(error.response.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
@@ -210,16 +183,12 @@ export default {
     },
     sendBioForm(){
       let bio = {bio: this.newBio};
-      console.log("sendBioForm", bio);
-      Axios.post("/user/" + this.userToDisplay.id +"/modifyBio" , bio)
+
+      Axios.put("/user/" + this.userToDisplay.id +"/modifyBio" , bio)
            .then( res => {
               console.log("modifyBio ", res)
               if(res.status == 200){
-                  //change bio in store
-                  //change 2 lines after that
                   let updateUser = this.userConnected;
-                  // updateUser.profilPic = this.newprofilPic;
-                  // faire direct this.userConnected.bio = this.newBio et faire this.userConnected dans le dispatch
                   this.$store.dispatch('userInfo', updateUser);
                   this.userToDisplay.bio = this.newBio;
                   this.bioForm = !this.bioForm;
@@ -236,7 +205,7 @@ export default {
             });
     },
     sendPasswordForm(){
-      Axios.post("/user/"+ this.userToDisplay.id +"/modifyPassword", {newPassword: this.newPassword})
+      Axios.put("/user/"+ this.userToDisplay.id +"/modifyPassword", {newPassword: this.newPassword})
            .then( res => {
               console.log("modifyPassword ", res)
               if(res.status == 200){
@@ -244,7 +213,7 @@ export default {
                 createToast(res.data.message,{type: 'success', timeout:2000, showIcon: true} );
                 this.passwordForm = false;
                 this.newPassword = "";
-              } else if(res.status == 401){
+              } else if(res.status == 401){ //TODO
                 createToast(res.data.message,{type: 'danger', timeout:2000, showIcon: true} );
               }
            })
@@ -256,15 +225,6 @@ export default {
             });
            
     },
-    resetValues(){
-        console.log("reset values");
-        //two way bindings
-        let input = document.getElementsByTagName("input")[0];
-        input.value = ""; 
-        // this.threadTitle = "";
-        // this.threadContent = "";
-        // this.file = "";
-    },
     deleteProfil(){
       console.log("delete user")
       console.log("route", this.$route);
@@ -272,19 +232,13 @@ export default {
 
       Axios.delete("/user/" + idToDelete)
            .then( res => {
-             console.log("res deleting account");
              if(res.status == 200){
-                console.log("delete successfull");
-
                 if(this.$route.fullPath == "/account"){
-                  console.log("disconnecting");
                   this.$store.dispatch('userInfo', '');
-                  // this.$store.dispatch('requestConfig', '');
                   localStorage.removeItem("groupomaniaToken");
                   this.userDeleted = true;
-                  // this.$router.push('/');
                   this.$router.push({ name: 'Welcome' });
-                } else {
+                } else { //TODO
                   this.$router.go('Home');
                 }
              }
@@ -296,56 +250,73 @@ export default {
 
 <style scoped lang="scss">
 
-.displayUser{
-  color: white;
-}
+  .displayUser{
+    color: white;
+    margin-bottom: 75px;
+  }
 
-.biography{
-  margin-bottom: 20px;
-}
+  .biography{
+    margin-bottom: 20px;
+  }
 
-img{
-  width: 50%;
-  margin-bottom: 20px;
-}
+  img{
+    width: 50%;
+    margin-bottom: 20px;
+  }
 
-.buttons{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.buttons__cat{
-  width: 100%;
-}
-button {
-  width: 50%;
-  // margin: auto;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-}
+  .buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .buttons__cat{
+    width: 100%;
+  }
+  button {
+    width: 50%;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
 
-form{
-  display: flex;
-  align-items: center;
-  margin-right: auto;
-  margin-left: auto;
-  flex-direction: column;
-  width: 88% !important;
-}
+  form{
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    margin-left: auto;
+    flex-direction: column;
+    width: 88% !important;
+  }
 
-hr{
-  width: 100%;
-}
-input{
-  width: 50%;
-}
+  input{
+    width: 50%;
+  }
 
-label{
-  width: 100%;
-}
+  label{
+    width: 100%;
+  }
 
-textarea{
-  width: 50%;
-}
+  textarea{
+    width: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .biography{
+      width: 80%;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    button {
+      width: 80%;
+    }
+    form{
+      width: 80% !important;
+    }
+    input{
+      width: 75%;
+    }
+    textarea{
+      width: 75%;
+    }
+  }
 </style>
