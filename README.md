@@ -3,6 +3,7 @@
 This project is a MVP for a social media website.
 
 ## Project setup
+You'll need npm so you can install everything needed with this command
 ```
 npm install
 ```
