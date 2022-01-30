@@ -116,7 +116,7 @@ export default {
     } else {        
         this.userId = this.route.params.id;
 
-        Axios.get("/user/getUserById", this.route.params)
+        Axios.post("/user/getUserById", this.route.params)
             .then( res => {
               if(res.status == 200){
                 this.userToDisplay = res.data.user;
