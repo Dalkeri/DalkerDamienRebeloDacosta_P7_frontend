@@ -1,19 +1,19 @@
 <template>
     <form @submit.prevent="signUp">
         <label for="lname" class="col-sm-2 col-form-label">Nom:</label>
-        <input type="text" id="signUpLName" name="signUpLName" v-model="SULName" class="form-control" placeholder="Nom" required>
+        <input type="text" id="signUpLName" name="signUpLName" v-model="SULName" class="form-control" placeholder="Nom"  autocomplete="on" required>
 
         <label for="fname" class="col-sm-2 col-form-label">Prenom:</label>
-        <input type="text" id="signUpFName" name="signUpFName" v-model="SUFName" class="form-control" placeholder="Prenom" required>
+        <input type="text" id="signUpFName" name="signUpFName" v-model="SUFName" class="form-control" placeholder="Prenom"  autocomplete="on" required>
 
         <label for="email" class="col-sm-2 col-form-label">Email:</label>
-        <input type="email" id="signUpEmail" name="signUpEmail" v-model="SUEmail" class="form-control" placeholder="email@example.com" required>
+        <input type="email" id="signUpEmail" name="signUpEmail" v-model="SUEmail" class="form-control" placeholder="email@example.com"  autocomplete="on" required>
 
         <label for="password" class="col-sm-2 col-form-label">Mot de passe (minimum 8 caractères):</label>
-        <input type="password" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8" class="form-control" placeholder="Password" required>
+        <input type="password" id="signUpPassword" name="signUpPassword" v-model="SUPassword" minlength="8" class="form-control" placeholder="Password"  autocomplete="on" required>
 
         <label for="password" class="col-sm-2 col-form-label">Répétez le mot de passe:</label>
-        <input type="password" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" minlength="8" class="form-control" placeholder="Password" required>
+        <input type="password" id="signUpPassword2" name="signUpPassword2" v-model="SUPassword2" minlength="8" class="form-control" placeholder="Password"  autocomplete="on" required>
         <input type="submit" value="Inscription"  class="btn btn-primary">
     </form> 
 </template>
