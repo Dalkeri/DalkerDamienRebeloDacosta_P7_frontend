@@ -2,8 +2,6 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    token: '',
-    navMenu: 'none',
     userConnected: '',
   },
   getters:{
@@ -15,9 +13,6 @@ export default createStore({
     }
   },
   mutations: {
-    saveToken (state, token){
-      state.token = token;
-    },
     setUserInfo(state, value){
       state.userConnected = value;
     }
